@@ -1,0 +1,44 @@
+# This allows us to merge arrays for Exclude rules on AllCops or a specific cop
+inherit_mode:
+  merge:
+    - Exclude
+
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.5
+  NewCops: enable
+
+# This allows a longer LineLength and ignores cuke definitions
+Layout/LineLength:
+  Max: 140
+  IgnoredPatterns:
+    - '^Given'
+    - '^When'
+    - '^Then'
+
+# Our gemspec and Spec files contain huge blocks and need to
+Metrics/BlockLength:
+  Exclude:
+    - './spec/**/*_spec.rb'
+    - 'site_prism.gemspec'
+
+# This allows a slightly longer ExampleLength
+RSpec/ExampleLength:
+  Max: 8
+
+# Stylistic preference to make the RSpec tests flow better
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+# We don't need to document any testing code
+Style/Documentation:
+  Exclude:
+    - features/**/*
+
+# This is a better style, and should be the default IMO
+Style/RegexpLiteral:
+  EnforcedStyle: slashes
+  AllowInnerSlashes: true
