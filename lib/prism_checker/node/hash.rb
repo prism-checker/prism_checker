@@ -53,7 +53,7 @@ module PrismChecker
       def check_expectation_compatibility
         allowed = [Capybara::Node::Element, SitePrism::Page, SitePrism::Section]
 
-        unless allowed.map{|c| element.is_a?(c)}.any?
+        unless allowed.map { |c| element.is_a?(c) }.any?
           raise Node::BadExpectation, mismatch_string(element, @expectation)
         end
       end
