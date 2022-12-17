@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'base'
+require_relative '../element_classifier'
 
 module PrismChecker
   module Node
@@ -21,44 +22,40 @@ module PrismChecker
             raise Node::CheckFail, 'Element is present'
           end
 
-          if element.is_a?(SitePrism::Section)
+          case ElementClassifier.classify(element)
+          when :section
             if @expectation == :invisible
-              if wait_until_true { element.visible? }
-                raise Node::CheckFail, 'Element is visible'
-              end
+              raise Node::CheckFail, 'Element is visible' if wait_until_true { element.visible? }
+
               return
             end
 
             check_allowed_expectations
-
             check_element_visible?
             check_prism_section
-          elsif element.is_a?(SitePrism::Page)
+          when :page
             check_allowed_expectations
             check_page_loaded?
             check_prism_page
-          elsif element.is_a?(::Array)
+          when :element
+            check_allowed_expectations
+            check_capybara_element
+          when :image
+            check_allowed_expectations
+            check_image
+          when :input
+            check_allowed_expectations
+            check_input
+          when :select
+            check_allowed_expectations
+            check_select
+          when :checkbox
+            check_checkbox_allowed_expectations
+            check_checkbox
+          when :array
             check_allowed_expectations
             check_array
-          elsif element.is_a?(Capybara::Node::Element)
-            if element_image?
-              check_allowed_expectations
-              check_image
-            elsif element_checkbox?
-              check_checkbox_allowed_expectations
-              check_checkbox
-            elsif element_input?
-              check_allowed_expectations
-              check_input
-            elsif element_select?
-              check_allowed_expectations
-              check_select
-            else
-              check_allowed_expectations
-              check_capybara_element
-            end
           else
-            # check_allowed_expectations
             check_default
           end
         end
@@ -67,18 +64,15 @@ module PrismChecker
       def check_allowed_expectations
         allowed = [String, Regexp, RSpec::Matchers::BuiltIn::BaseMatcher] # TODO: :invisible, :absent
 
-        unless allowed.map{|c| @expectation.is_a?(c)}.any?
-          raise Node::BadExpectation, mismatch_string(element, @expectation)
-        end
+        raise Node::BadExpectation, mismatch_string(element, @expectation) unless allowed.map { |c| @expectation.is_a?(c) }.any?
       end
 
       def check_checkbox_allowed_expectations
         allowed = [TrueClass, FalseClass]
 
-        unless allowed.map{|c| @expectation.is_a?(c)}.any?
+        unless allowed.map { |c| @expectation.is_a?(c) }.any?
           raise Node::BadExpectation, mismatch_string(element, @expectation, %w[true false])
         end
-        return
       end
 
       def check_default
@@ -89,11 +83,9 @@ module PrismChecker
 
       def check_array
         check_value do
-          begin
-            element.map(&:text).join(' ')
-          rescue StandardError # TODO
-            element.map(&:to_s).join(' ')
-          end
+          element.map(&:text).join(' ')
+        rescue StandardError # TODO
+          element.map(&:to_s).join(' ')
         end
       end
 
@@ -135,62 +127,14 @@ module PrismChecker
 
       def check_value
         value = nil
+        expectation_checker = checker.expectation_checkers.find(@expectation)
 
-        if @expectation.is_a?(String)
-          if wait_until_true do
-            value = yield
-            value.to_s.include?(@expectation)
-          end
-            return
-          end
-
-          raise Node::CheckFail, "Expected '#{value.to_s}' to include '#{@expectation}'"
-        elsif @expectation.is_a?(Regexp)
-          if wait_until_true do
-            value = yield
-            value.to_s =~ @expectation
-          end
-            return
-          end
-
-          raise(Node::CheckFail, "Expected '#{value.to_s}' to match '/#{@expectation.source}/'")
-        elsif @expectation.is_a?(RSpec::Matchers::BuiltIn::BaseMatcher)
-
-          if wait_until_true do
-            value = yield
-            @expectation.matches?(value)
-          end
-            return
-          end
-
-          raise Node::CheckFail, @expectation.failure_message.chomp.sub(/$\n/, '')
-        else
-          if wait_until_true do
-            value = yield
-            value == @expectation
-          end
-            return
-          end
-
-          raise(Node::CheckFail, "Expected #{value} (#{value.class.name}) to equal #{@expectation} (#{@expectation.class.name})")
+        result = wait_until_true do
+          value = yield
+          expectation_checker[:check].call(@expectation, value)
         end
 
-      end
-
-      def element_image?
-        element.is_a?(Capybara::Node::Element) && element.tag_name == 'img'
-      end
-
-      def element_input?
-        element.is_a?(Capybara::Node::Element) && element.tag_name == 'input'
-      end
-
-      def element_select?
-        element.is_a?(Capybara::Node::Element) && element.tag_name == 'select'
-      end
-
-      def element_checkbox?
-        element_input? && element['type'] == 'checkbox'
+        raise Node::CheckFail, expectation_checker[:error_message].call(@expectation, value) unless result
       end
     end
   end

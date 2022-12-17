@@ -6,17 +6,20 @@ require_relative 'node/hash'
 require_relative 'node/array'
 require_relative 'node/expectation'
 require_relative 'node/bad_expectation'
+require_relative 'node/bad_expectation'
 require_relative 'colorizer'
+require_relative 'expectation_checkers'
 
 module PrismChecker
   class Checker
-    attr_reader :item, :errors, :root, :colorizer
+    attr_reader :item, :errors, :root, :colorizer, :expectation_checkers
 
-    def initialize(colorizer: PrismChecker::Colorizer)
+    def initialize(colorizer: PrismChecker::Colorizer, expectation_checkers: [])
       @item = nil
       @expectation = nil
       @root = nil
       @colorizer = colorizer
+      @expectation_checkers = ExpectationCheckers.new(expectation_checkers)
     end
 
     def check(item, expectation)

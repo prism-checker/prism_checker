@@ -15,5 +15,9 @@ module PrismChecker
 
       @element[method]
     end
+
+    def respond_to_missing?(*_args)
+      true
+    end
   end
 end
