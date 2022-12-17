@@ -9,6 +9,7 @@ require_relative 'node/bad_expectation'
 require_relative 'node/bad_expectation'
 require_relative 'colorizer'
 require_relative 'expectation_checkers'
+require_relative 'report_builder'
 
 module PrismChecker
   class Checker
@@ -43,12 +44,8 @@ module PrismChecker
     end
 
     def report
-      @root.report(0, nil)
+      ReportBuilder.new(@root, @colorizer).build
     end
-
-    # def disable_colorization
-    #   @colorizer = Colorizer::Null
-    # end
 
     private
 

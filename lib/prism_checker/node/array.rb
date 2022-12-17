@@ -4,6 +4,8 @@ require_relative 'base'
 module PrismChecker
   module Node
     class Array < PrismChecker::Node::Base
+      attr_reader :children
+
       def initialize(checker, parent, name, expectation)
         super
         @children = []
@@ -18,21 +20,6 @@ module PrismChecker
         @children.each do |c|
           c.walk_through(level + 1, &block)
         end
-      end
-
-      def report(level, key)
-        if failure?
-          message = format_error_message(@error.message, level, key)
-          return colorizer.wrap("#{status}: #{message}", :failure)
-        end
-
-        result = +colorizer.wrap("[\n", :white)
-
-        @children.each do |child|
-          result << "#{padding(level + 1)}#{child.report(level + 1, key)}\n"
-        end
-
-        result << colorizer.wrap("#{padding(level)}]", :white)
       end
 
       def check

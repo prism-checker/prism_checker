@@ -7,7 +7,7 @@ require_relative '../element_wrapper'
 module PrismChecker
   module Node
     class Base
-      attr_reader :name, :status, :message, :parent, :checker, :colorizer
+      attr_reader :name, :status, :error, :parent, :checker, :colorizer
 
       def initialize(checker, parent, name, expectation)
         @parent = parent
@@ -41,42 +41,6 @@ module PrismChecker
         else
           parent.is_a?(Node::Hash) ? parent.element.send(@name) : parent.element.send(:[], @name)
         end
-      end
-
-      def padding(level)
-        '  ' * level
-      end
-
-      def key_padding(key)
-        return '' if key.to_s.length == 0
-
-        ' ' * (key.to_s.length + 2)
-      end
-
-      def status_padding
-        ' ' * (status.length + 2)
-      end
-
-      def report(level, key)
-        if failure?
-          return @colorizer.wrap("#{status}: #{format_error_message(@error.message, level, key)}", :failure)
-        end
-
-        if success?
-          return @colorizer.wrap(status, :success)
-        end
-
-        @colorizer.wrap(status, :detail)
-      end
-
-      def format_error_message(message, level, key)
-        message.lines.map.with_index do |line, idx|
-          if idx.zero?
-            line
-          else
-            "#{padding(level)}#{status_padding}#{key_padding(key)}#{line}"
-          end
-        end.join
       end
 
       def check_element_visible?
