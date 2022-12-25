@@ -8,9 +8,13 @@ module PrismChecker
       return :select if element_select?(element)
       return :image if element_image?(element)
       return :element if element?(element)
+      return :elements if elements?(element)
       return :section if section?(element)
+      return :sections if sections?(element)
       return :page if page?(element)
       return :array if array?(element)
+      return :string if string?(element)
+      return :boolean if element.is_a?(TrueClass) || element.is_a?(FalseClass)
 
       :other
     end
@@ -23,12 +27,28 @@ module PrismChecker
       element.is_a?(SitePrism::Section)
     end
 
+    def self.sections?(element)
+      element.all?(SitePrism::Section)
+    rescue StandardError
+      false
+    end
+
     def self.element?(element)
       element.is_a?(Capybara::Node::Element)
     end
 
+    def self.elements?(element)
+      element.all?(Capybara::Node::Element)
+    rescue StandardError
+      false
+    end
+
     def self.array?(element)
       element.is_a?(::Array)
+    end
+
+    def self.string?(element)
+      element.is_a?(::String)
     end
 
     def self.element_image?(element)

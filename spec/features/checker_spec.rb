@@ -4,8 +4,9 @@ require_relative '../support/pages/blog'
 require 'prism_checker/checker'
 
 describe PrismChecker::Checker do
-  let(:page) { Blog.new }
   subject(:checker) { described_class.new }
+
+  let(:page) { Blog.new }
 
   describe '.check' do
     context 'when page is valid' do
@@ -37,9 +38,12 @@ describe PrismChecker::Checker do
 
         context 'when expectation is defined as hash and contains array as sections description' do
           it 'result is success' do
-            expect(checker.check(page, {
+            checker.check(page, {
               posts: {
                 header: 'Posts',
+                root_element: {
+                  class: 'posts-holder'
+                },
                 post: [
                   {
                     title: 'Lorem ipsum'
@@ -47,7 +51,9 @@ describe PrismChecker::Checker do
                   /Vestibulum ante/
                 ]
               }
-            })).to eq true
+            })
+
+            puts checker.report
           end
         end
 
@@ -143,12 +149,12 @@ describe PrismChecker::Checker do
           it 'report contains description' do
             checker.check(page, expectation)
             expect(checker.report).to eq <<~REPORT.strip
-            {
-              header: Ok
-              posts: {
-                header: Fail: Expected 'Posts' to include 'My posts'
+              {
+                header: Ok
+                posts: {
+                  header: Fail: Expected 'Posts' to include 'My posts'
+                }
               }
-            }
             REPORT
           end
         end
@@ -162,11 +168,11 @@ describe PrismChecker::Checker do
         context 'when expectation contains hash with string' do
           it 'raises error with report as message' do
             expected_report = <<~REPORT.strip
-            {
-              header: Ok
-              posts: Error: Unable to find css ".posts-holder"
-            }
-            Unable to find css ".posts-holder"
+              {
+                header: Ok
+                posts: Error: Unable to find css ".posts-holder"
+              }
+              Unable to find css ".posts-holder"
             REPORT
 
             expect { checker.check(page, {header: 'My Blog', posts: {header: 'Posts'}}) }
@@ -200,15 +206,15 @@ describe PrismChecker::Checker do
             checker.check(page, expectation)
             # puts checker.report
             expect(checker.report).to eq <<~REPORT.strip
-            {
-              header: Ok
-              posts: {
-                post: Fail: Wrong elements count
-                            Actual: 2
-                            Expected: 3
-                header: Not checked
+              {
+                header: Ok
+                posts: {
+                  post: Fail: Wrong elements count
+                              Actual: 2
+                              Expected: 3
+                  header: Not checked
+                }
               }
-            }
             REPORT
           end
         end
@@ -240,20 +246,20 @@ describe PrismChecker::Checker do
           it 'report contains description' do
             checker.check(page, expectation)
             expect(checker.report).to eq <<~REPORT.strip
-            {
-              header: Ok
-              posts: {
-                post: [
-                  {
-                    title: Ok
-                  }
-                  {
-                    title: Fail: Expected 'Vestibulum ante' to include 'Ut eget justo erat'
-                  }
-                ]
-                header: Not checked
+              {
+                header: Ok
+                posts: {
+                  post: [
+                    {
+                      title: Ok
+                    }
+                    {
+                      title: Fail: Expected 'Vestibulum ante' to include 'Ut eget justo erat'
+                    }
+                  ]
+                  header: Not checked
+                }
               }
-            }
             REPORT
           end
         end
@@ -281,10 +287,10 @@ describe PrismChecker::Checker do
           it 'report contains description' do
             checker.check(page, expectation)
             expect(checker.report).to eq <<~REPORT.strip
-            {
-              header: Ok
-              posts: Fail: Element is not visible
-            }
+              {
+                header: Ok
+                posts: Fail: Element is not visible
+              }
             REPORT
           end
         end
@@ -304,10 +310,10 @@ describe PrismChecker::Checker do
           it 'report contains description' do
             checker.check(page, expectation)
             expect(checker.report).to eq <<~REPORT.strip
-            {
-              header: Ok
-              posts: Fail: Element is not visible
-            }
+              {
+                header: Ok
+                posts: Fail: Element is not visible
+              }
             REPORT
           end
         end
@@ -327,10 +333,10 @@ describe PrismChecker::Checker do
           it 'report contains description' do
             checker.check(page, expectation)
             expect(checker.report).to eq <<~REPORT.strip
-            {
-              header: Ok
-              posts: Fail: Element is not visible
-            }
+              {
+                header: Ok
+                posts: Fail: Element is not visible
+              }
             REPORT
           end
         end

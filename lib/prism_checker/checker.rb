@@ -6,21 +6,22 @@ require_relative 'node/hash'
 require_relative 'node/array'
 require_relative 'node/expectation'
 require_relative 'node/bad_expectation'
-require_relative 'node/bad_expectation'
 require_relative 'colorizer'
-require_relative 'expectation_checkers'
+# require_relative 'expectation_checkers'
 require_relative 'report_builder'
+require_relative 'element_classifier'
+require_relative 'expectation_classifier'
 
 module PrismChecker
   class Checker
-    attr_reader :item, :errors, :root, :colorizer, :expectation_checkers
+    attr_reader :item, :errors, :root, :colorizer, :expectation_checkers, :result
 
     def initialize(colorizer: PrismChecker::Colorizer, expectation_checkers: [])
       @item = nil
       @expectation = nil
       @root = nil
       @colorizer = colorizer
-      @expectation_checkers = ExpectationCheckers.new(expectation_checkers)
+      @result = nil
     end
 
     def check(item, expectation)
@@ -30,21 +31,31 @@ module PrismChecker
         node.check
       end
 
-      true
+      @result = true
     rescue Node::CheckFail
-      false
+      @result = false
       # rescue Node::BadExpectation => e
       #   # raise
       #   raise e.class, report + "\n" + e.message
     rescue StandardError => e
       # puts '---------------------'
+      # puts e.class
       # puts e.message
+      # pp e.backtrace
       # puts '---------------------'
       raise e.class, report + "\n" + e.message
     end
 
     def report
       ReportBuilder.new(@root, @colorizer).build
+    end
+
+    def print_tree(item, expectation)
+      prepare(item, expectation)
+      @root.walk_through do |node, level|
+        padding = '  ' * level
+        puts "#{padding}#{node.name}         ->#{node.element.class.name}"
+      end
     end
 
     private
@@ -65,6 +76,8 @@ module PrismChecker
     end
 
     def prepare(item, expectation)
+      return if @root
+
       @item = item
       @expectation = expectation
       @root = build_node(expectation, self, :root)
