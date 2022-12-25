@@ -3,7 +3,7 @@
 require_relative '../../support/pages/elements'
 require 'prism_checker/checker'
 
-describe PrismChecker::Checker do
+describe PrismChecker::Checker, skip: true do
   let(:page) { Elements.new }
   subject(:checker) { described_class.new }
 

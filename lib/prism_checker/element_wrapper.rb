@@ -6,9 +6,15 @@ module PrismChecker
       @element = element
     end
 
+    def class
+      @element[:class]
+    end
+
     def method_missing(method, *args)
-      # puts "method_missing #{method}"
-      # byebug
+      if @element.respond_to?(method)
+        return @element.send(method, *args)
+      end
+
       if @element.tag_name == 'input' && @element['type'] == 'checkbox' && method == :checked
         return @element.checked?
       end

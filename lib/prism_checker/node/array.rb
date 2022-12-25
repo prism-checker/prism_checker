@@ -21,27 +21,6 @@ module PrismChecker
           c.walk_through(level + 1, &block)
         end
       end
-
-      def check
-        check_wrapper do
-          check_expectation_compatibility
-          check_array_size
-        end
-      end
-
-      def check_expectation_compatibility
-        unless element.is_a? ::Array
-          raise Node::BadExpectation, mismatch_string(element, @expectation)
-        end
-      end
-
-      def check_array_size
-        if wait_until_true { element.size == @children.size }
-          return
-        end
-
-        raise Node::CheckFail, "Wrong elements count\nActual: #{element.size}\nExpected: #{@children.size}"
-      end
     end
   end
 end

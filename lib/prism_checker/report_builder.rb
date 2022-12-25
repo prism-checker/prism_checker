@@ -11,12 +11,14 @@ module PrismChecker
       report(@root, 0, nil)
     end
 
+    private
+
     def padding(level)
       '  ' * level
     end
 
     def key_padding(key)
-      return '' if key.to_s.length == 0
+      return '' if key.to_s.length.zero?
 
       ' ' * (key.to_s.length + 2)
     end
@@ -26,21 +28,17 @@ module PrismChecker
     end
 
     def report(node, level, key)
-      if node.failure?
-        return @colorizer.wrap("#{node.status}: #{format_error_message(node, level, key)}", :failure)
-      end
+      return @colorizer.wrap("#{node.status}: #{format_error_message(node, level, key)}", :failure) if node.failure?
+      return @colorizer.wrap(node.status, :detail) unless node.success?
 
-      if node.success?
-        if node.is_a?(Node::Array)
-          return report_array(node, level, key)
-        elsif node.is_a?(Node::Hash)
-          return report_hash(node, level, key)
-        else
-          return @colorizer.wrap(node.status, :success)
-        end
+      case node
+      when Node::Array
+        report_array(node, level, key)
+      when Node::Hash
+        report_hash(node, level, key)
+      else
+        @colorizer.wrap(node.status, :success)
       end
-
-      @colorizer.wrap(node.status, :detail)
     end
 
     def report_array(node, level, key)
@@ -53,7 +51,7 @@ module PrismChecker
       result << @colorizer.wrap("#{padding(level)}]", :white)
     end
 
-    def report_hash(node, level, key)
+    def report_hash(node, level, _key)
       result = +@colorizer.wrap("{\n", :white)
       result << children_report(node, level)
       result << @colorizer.wrap("#{padding(level)}}", :white)

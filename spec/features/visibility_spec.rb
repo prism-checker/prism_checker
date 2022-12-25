@@ -40,6 +40,8 @@ describe PrismChecker::Checker do
 
         it 'report contains description' do
           checker.check(page, expectation)
+          pp expectation
+          puts checker.report
           expect(checker.report).to eq <<~REPORT.strip
             {
               posts: Fail: Element is visible

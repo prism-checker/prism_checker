@@ -3,22 +3,29 @@
 require_relative 'check_fail'
 require_relative 'bad_expectation'
 require_relative '../element_wrapper'
+require_relative '../absence_expectation'
 
 module PrismChecker
   module Node
     class Base
-      attr_reader :name, :status, :error, :parent, :checker, :colorizer
+      attr_reader :name, :status, :error, :parent, :checker, :colorizer, :expectation
 
       def initialize(checker, parent, name, expectation)
         @parent = parent
         @checker = checker
         @name = name
-        @expectation = expectation
+        @expectation = if expectation == :absent
+                         AbsenceExpectation.new(1)
+                       else
+                         expectation
+                       end
+
         @element = nil
         @status = 'Not checked'
         @element_done = false
         @error = nil
         @colorizer = checker.colorizer
+        @timeout = Capybara.default_max_wait_time
       end
 
       def root?
@@ -36,27 +43,19 @@ module PrismChecker
       def element
         if root?
           @checker.item
-        elsif parent.element.is_a?(Capybara::Node::Element)
-          ElementWrapper.new(parent.element).send(@name)
-        else
-          parent.is_a?(Node::Hash) ? parent.element.send(@name) : parent.element.send(:[], @name)
-        end
-      end
-
-      def check_element_visible?
-        unless wait_until_true { element.visible? }
-          raise Node::CheckFail, 'Element is not visible'
-        end
-      end
-
-      def check_page_loaded?
-        unless element.loaded?
-          raise Node::CheckFail, 'Page is not loaded'
+        elsif parent.is_a?(Node::Hash)
+          if parent.element.is_a?(Capybara::Node::Element)
+            ElementWrapper.new(parent.element).send(@name)
+          else
+            parent.element.send(@name)
+          end
+        elsif parent.is_a?(Node::Array)
+          parent.element[@name]
         end
       end
 
       def wait_until_true(&block)
-        SitePrism::Waiter.wait_until_true(&block)
+        SitePrism::Waiter.wait_until_true(@timeout, &block)
       rescue SitePrism::TimeoutError
         false
       end
@@ -74,13 +73,36 @@ module PrismChecker
         raise
       end
 
-      def mismatch_string(element, expectation, allowed_expectations = nil)
-        element_class = element.class.ancestors.map(&:name).compact.first
-        ret = "Can not check element of type #{element_class} with expectation:\n#{expectation.pretty_inspect.chomp}"
-        if allowed_expectations
-          return ret + ". Allowed expectations: #{allowed_expectations.join(', ')}"
+      def check_absence
+        sleep @expectation.delay
+
+        check_wrapper do
+          result = wait_until_true do
+            element
+            false
+          rescue Capybara::ElementNotFound
+            true
+          end
+
+          raise Node::CheckFail, 'Element is present' unless result
         end
-        ret
+      end
+
+      def check
+        return check_absence if @expectation.is_a?(AbsenceExpectation)
+
+        check_wrapper do
+          methods = CheckDispatcher.new.find_methods(element, @expectation)
+          value = nil
+          methods.each do |mm|
+            result = wait_until_true do
+              value = mm.send(:value, element)
+              mm.send(:check, element, value, @expectation)
+            end
+
+            raise Node::CheckFail, mm.send(:error_message, element, value, @expectation) unless result
+          end
+        end
       end
     end
   end
