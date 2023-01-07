@@ -8,23 +8,16 @@ require_relative '../absence_expectation'
 module PrismChecker
   module Node
     class Base
-      attr_reader :name, :status, :error, :parent, :checker, :colorizer, :expectation
+      attr_reader :name, :status, :error, :parent, :checker, :expectation
 
       def initialize(checker, parent, name, expectation)
         @parent = parent
         @checker = checker
         @name = name
-        @expectation = if expectation == :absent
-                         AbsenceExpectation.new(1)
-                       else
-                         expectation
-                       end
-
+        @expectation = expectation == :absent ? AbsenceExpectation.new(1) : expectation
         @element = nil
         @status = 'Not checked'
-        @element_done = false
         @error = nil
-        @colorizer = checker.colorizer
         @timeout = Capybara.default_max_wait_time
       end
 
@@ -74,7 +67,7 @@ module PrismChecker
       end
 
       def check_absence
-        sleep @expectation.delay
+        sleep expectation.delay
 
         check_wrapper do
           result = wait_until_true do
@@ -89,18 +82,18 @@ module PrismChecker
       end
 
       def check
-        return check_absence if @expectation.is_a?(AbsenceExpectation)
+        return check_absence if expectation.is_a?(AbsenceExpectation)
 
         check_wrapper do
-          methods = CheckDispatcher.new.find_methods(element, @expectation)
+          checkers = CheckDispatcher.checkers(element, expectation)
           value = nil
-          methods.each do |mm|
+          checkers.each do |checker|
             result = wait_until_true do
-              value = mm.send(:value, element)
-              mm.send(:check, element, value, @expectation)
+              value = checker.send(:value, element)
+              checker.send(:check, element, value, expectation)
             end
 
-            raise Node::CheckFail, mm.send(:error_message, element, value, @expectation) unless result
+            raise Node::CheckFail, checker.send(:error_message, element, value, expectation) unless result
           end
         end
       end

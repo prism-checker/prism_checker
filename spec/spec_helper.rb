@@ -8,6 +8,7 @@ require 'byebug'
 require 'site_prism'
 require 'selenium-webdriver'
 require 'webdrivers'
+require_relative './custom_matchers'
 
 Webdrivers::Chromedriver.required_version = '106.0.5249.61'
 Capybara.default_max_wait_time = 5

@@ -9,14 +9,14 @@ require_relative 'node/bad_expectation'
 require_relative 'colorizer'
 # require_relative 'expectation_checkers'
 require_relative 'report_builder'
-require_relative 'element_classifier'
+require_relative 'item_classifier'
 require_relative 'expectation_classifier'
 
 module PrismChecker
   class Checker
-    attr_reader :item, :errors, :root, :colorizer, :expectation_checkers, :result
+    attr_reader :item, :root, :colorizer, :result
 
-    def initialize(colorizer: PrismChecker::Colorizer, expectation_checkers: [])
+    def initialize(colorizer: PrismChecker::Colorizer)
       @item = nil
       @expectation = nil
       @root = nil
@@ -50,13 +50,13 @@ module PrismChecker
       ReportBuilder.new(@root, @colorizer).build
     end
 
-    def print_tree(item, expectation)
-      prepare(item, expectation)
-      @root.walk_through do |node, level|
-        padding = '  ' * level
-        puts "#{padding}#{node.name}         ->#{node.element.class.name}"
-      end
-    end
+    # def print_tree(item, expectation)
+    #   # prepare(item, expectation)
+    #   @root.walk_through do |node, level|
+    #     padding = '  ' * level
+    #     puts "#{padding}#{node.name}"
+    #   end
+    # end
 
     private
 
@@ -76,8 +76,6 @@ module PrismChecker
     end
 
     def prepare(item, expectation)
-      return if @root
-
       @item = item
       @expectation = expectation
       @root = build_node(expectation, self, :root)

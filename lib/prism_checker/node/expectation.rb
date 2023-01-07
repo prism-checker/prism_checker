@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'base'
-require_relative '../element_classifier'
+require_relative '../item_classifier'
 require_relative '../check_dispatcher'
 
 module PrismChecker

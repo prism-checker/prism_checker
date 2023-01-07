@@ -28,8 +28,8 @@ module PrismChecker
     end
 
     def report(node, level, key)
-      return @colorizer.wrap("#{node.status}: #{format_error_message(node, level, key)}", :failure) if node.failure?
-      return @colorizer.wrap(node.status, :detail) unless node.success?
+      return @colorizer.colorize("#{node.status}: #{format_error_message(node, level, key)}", :failure) if node.failure?
+      return @colorizer.colorize(node.status, :detail) unless node.success?
 
       case node
       when Node::Array
@@ -37,29 +37,29 @@ module PrismChecker
       when Node::Hash
         report_hash(node, level, key)
       else
-        @colorizer.wrap(node.status, :success)
+        @colorizer.colorize(node.status, :success)
       end
     end
 
     def report_array(node, level, key)
-      result = +@colorizer.wrap("[\n", :white)
+      result = +@colorizer.colorize("[\n", :white)
 
       node.children.each do |child|
         result << "#{padding(level + 1)}#{report(child, level + 1, key)}\n"
       end
 
-      result << @colorizer.wrap("#{padding(level)}]", :white)
+      result << @colorizer.colorize("#{padding(level)}]", :white)
     end
 
     def report_hash(node, level, _key)
-      result = +@colorizer.wrap("{\n", :white)
+      result = +@colorizer.colorize("{\n", :white)
       result << children_report(node, level)
-      result << @colorizer.wrap("#{padding(level)}}", :white)
+      result << @colorizer.colorize("#{padding(level)}}", :white)
     end
 
     def children_report(node, level)
       node.children.map do |child_key, child|
-        key_str = @colorizer.wrap("#{padding(level + 1)}#{child_key}:", :white)
+        key_str = @colorizer.colorize("#{padding(level + 1)}#{child_key}:", :white)
         "#{key_str} #{report(child, level + 1, child_key)}\n"
       end.join
     end

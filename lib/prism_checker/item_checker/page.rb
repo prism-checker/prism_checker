@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require_relative 'value_mixin/page_mixin'
-require_relative 'check_mixin/string'
-require_relative 'check_mixin/regexp'
+require_relative 'item_value/page'
+require_relative 'item_check/string'
+require_relative 'item_check/regexp'
 
 module PrismChecker
   module ItemChecker
     module Page
-      class String2
-        extend PageMixin::PageValue2
-        extend CheckMixin::StringCheck2
+      class String
+        extend ItemValue::Page
+        extend ItemCheck::String
       end
 
-      class Regexp2
-        extend PageMixin::PageValue2
-        extend CheckMixin::RegexpCheck2
+      class Regexp
+        extend ItemValue::Page
+        extend ItemCheck::Regexp
       end
 
       class Loaded
