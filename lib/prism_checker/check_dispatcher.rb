@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'element_classifier'
+require_relative 'item_classifier'
 require_relative 'expectation_classifier'
 require_relative 'item_checker/array'
 require_relative 'item_checker/element'
@@ -9,44 +9,15 @@ require_relative 'item_checker/image'
 require_relative 'item_checker/input'
 require_relative 'item_checker/page'
 require_relative 'item_checker/string'
+require_relative 'item_checker/nil'
+require_relative 'node/bad_expectation'
 
 module PrismChecker
   class CheckDispatcher
-    METHODS2 = {
-      string: {
-        page: [PrismChecker::ItemChecker::Page::Loaded, PrismChecker::ItemChecker::Page::String2],
-        section: [PrismChecker::ItemChecker::Element::Visible, PrismChecker::ItemChecker::Element::String],
-        sections: [PrismChecker::ItemChecker::Elements::String],
-        element: [PrismChecker::ItemChecker::Element::Visible, PrismChecker::ItemChecker::Element::String],
-        elements: [PrismChecker::ItemChecker::Elements::String],
-        image: [PrismChecker::ItemChecker::Image::String],
-        input: [PrismChecker::ItemChecker::Input::String]
-      },
-      regexp: {
-        page: [PrismChecker::ItemChecker::Page::Loaded, PrismChecker::ItemChecker::Page::Regexp2],
-        section: [PrismChecker::ItemChecker::Element::Visible, PrismChecker::ItemChecker::Element::Regexp],
-        sections: [PrismChecker::ItemChecker::Elements::Regexp],
-        element: [PrismChecker::ItemChecker::Element::Visible, PrismChecker::ItemChecker::Element::Regexp],
-        elements: [PrismChecker::ItemChecker::Elements::Regexp],
-        image: [PrismChecker::ItemChecker::Image::Regexp],
-        input: [PrismChecker::ItemChecker::Input::Regexp]
-      },
-      invisible: {
-        section: [PrismChecker::ItemChecker::Element::Invisible],
-        element: [PrismChecker::ItemChecker::Element::Invisible],
-        image: [PrismChecker::ItemChecker::Element::Invisible],
-        input: [PrismChecker::ItemChecker::Element::Invisible]
-      },
-      array: {
-        sections: [PrismChecker::ItemChecker::Elements::Array],
-        elements: [PrismChecker::ItemChecker::Elements::Array]
-      }
-    }.freeze
-
-    METHODS = {
+    @check_map = {
       page: {
-        string: [ItemChecker::Page::Loaded, ItemChecker::Page::String2],
-        regexp: [ItemChecker::Page::Loaded, ItemChecker::Page::Regexp2],
+        string: [ItemChecker::Page::Loaded, ItemChecker::Page::String],
+        regexp: [ItemChecker::Page::Loaded, ItemChecker::Page::Regexp],
         hash: [ItemChecker::Page::Loaded]
       },
 
@@ -96,39 +67,46 @@ module PrismChecker
       string: {
         string: [ItemChecker::String::String],
         regexp: [ItemChecker::String::Regexp]
+      },
+
+      nil: {
+        string: [ItemChecker::Nil::String],
+        regexp: [ItemChecker::Nil::Regexp]
       }
-    }.freeze
+    }
 
-    def find_methods(element, expectation)
-      puts "#{ElementClassifier.classify(element)} == #{ExpectationClassifier.classify(expectation)}"
+    def self.checkers(element, expectation)
+      item_type = ItemClassifier.classify(element)
+      element_expectations = @check_map[item_type]
 
-      element_desc = METHODS[ElementClassifier.classify(element)]
+      puts "#{item_type} --> ..."
 
-      raise Node::BadExpectation, "Don't know how to compare '#{element}' (classified as #{ElementClassifier.classify(element)}) with expectation '#{expectation}'" unless element_desc
+      raise_bad_element(element) unless element_expectations
 
-      return unless element_desc
+      expectation_type = ExpectationClassifier.classify(expectation)
+      checkers = element_expectations[expectation_type]
 
-      # raise_bad_expectation(element, expectation) unless element_desc
+      raise_bad_expectation(element, expectation) unless checkers
 
-      expectation_methods = element_desc[ExpectationClassifier.classify(expectation)]
+      puts "#{item_type} --> #{expectation_type}"
 
-      # return unless expectation_methods
-      raise_bad_expectation(element, expectation) unless expectation_methods
-
-      expectation_methods
+      checkers
     end
 
-    def mismatch_string(element, expectation)
+    def self.raise_bad_element(element)
+      error = "Don't know how to check #{element.class.name}"
+      raise Node::BadExpectation, error
+    end
+
+    def self.raise_bad_expectation(element, expectation)
       element_class = element.class.name || element.class.ancestors.map(&:name).compact.first || '<Unknown>'
-      "Don't know how to compare '#{element_class}' with expectation '#{expectation}'"
+      error = "Don't know how to compare #{element_class} with #{expectation.class.name}"
+      raise Node::BadExpectation, error
     end
 
-    def raise_bad_element(element, expectation)
-      raise Node::BadExpectation, mismatch_string(element, expectation)
-    end
-
-    def raise_bad_expectation(element, expectation)
-      raise Node::BadExpectation, mismatch_string(element, expectation)
+    def self.add(element_type, check_type, checks)
+      @check_map[element_type] ||= {}
+      @check_map[element_type][check_type] = checks
     end
   end
 end

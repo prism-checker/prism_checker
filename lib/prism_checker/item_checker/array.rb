@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require_relative 'check_mixin/string'
-require_relative 'check_mixin/regexp'
-require_relative 'value_mixin/array_mixin'
+require_relative 'item_check/string'
+require_relative 'item_check/regexp'
+require_relative 'item_value/array'
 
 module PrismChecker
   module ItemChecker
     module Array
       class String
-        extend ValueMixin::ArrayValue
-        extend CheckMixin::StringCheck2
+        extend ItemValue::Array
+        extend ItemCheck::String
       end
 
       class Regexp
-        extend ValueMixin::ArrayValue
-        extend CheckMixin::RegexpCheck2
+        extend ItemValue::Array
+        extend ItemCheck::Regexp
       end
     end
   end

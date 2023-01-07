@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'prism_checker/item_classifier'
+
 module PrismChecker
   class ElementWrapper
     def initialize(element)
@@ -15,9 +17,7 @@ module PrismChecker
         return @element.send(method, *args)
       end
 
-      if @element.tag_name == 'input' && @element['type'] == 'checkbox' && method == :checked
-        return @element.checked?
-      end
+      return @element.checked? if ItemClassifier.element_checkbox?(@element) && method == :checked
 
       @element[method]
     end
