@@ -8,7 +8,8 @@ module PrismChecker
       %i[regexp regexp?],
       %i[array array?],
       %i[hash hash?],
-      %i[boolean boolean?]
+      %i[boolean boolean?],
+      %i[number number?]
     ]
 
     def self.classify(expectation)
@@ -48,6 +49,10 @@ module PrismChecker
 
     def self.boolean?(expectation)
       expectation.is_a?(TrueClass) || expectation.is_a?(FalseClass)
+    end
+
+    def self.number?(expectation)
+      expectation.is_a?(Integer)
     end
 
     def self.add(type, probe, position = 0)

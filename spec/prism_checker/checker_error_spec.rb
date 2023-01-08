@@ -30,7 +30,7 @@ describe PrismChecker::Checker do
   before { page.load(config: 'no-posts') }
 
   describe '.check' do
-    context 'when when element ot found' do
+    context 'when element not found' do
       it 'raises error with report as message' do
         expect { checker.check(page, expectation) }.to raise_error(Capybara::ElementNotFound).with_message(Regexp.new(expected_report))
       end

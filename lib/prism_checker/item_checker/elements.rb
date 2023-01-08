@@ -30,6 +30,20 @@ module PrismChecker
           "Wrong elements count\nActual: #{elements.size}\nExpected: #{expectation.size}"
         end
       end
+
+      class Number
+        def self.value(elements)
+          elements.size
+        end
+
+        def self.check(_elements, value, expectation)
+          value == expectation
+        end
+
+        def self.error_message(_elements, value, expectation)
+          "Wrong elements count\nActual: #{value}\nExpected: #{expectation}"
+        end
+      end
     end
   end
 end

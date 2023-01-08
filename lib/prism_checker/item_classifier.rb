@@ -4,6 +4,7 @@ module PrismChecker
   class ItemClassifier
     @elements_map = [
       %i[checkbox element_checkbox?],
+      %i[radio element_radio?],
       %i[input element_input?],
       %i[select element_select?],
       %i[image element_image?],
@@ -88,6 +89,13 @@ module PrismChecker
     def self.element_checkbox?(element)
       return false unless element?(element)
       return false unless element['type'] == 'checkbox'
+
+      true
+    end
+
+    def self.element_radio?(element)
+      return false unless element?(element)
+      return false unless element['type'] == 'radio'
 
       true
     end

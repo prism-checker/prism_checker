@@ -7,6 +7,8 @@ require_relative 'item_checker/element'
 require_relative 'item_checker/elements'
 require_relative 'item_checker/image'
 require_relative 'item_checker/input'
+require_relative 'item_checker/checkbox'
+require_relative 'item_checker/any'
 require_relative 'item_checker/page'
 require_relative 'item_checker/string'
 require_relative 'item_checker/nil'
@@ -31,7 +33,8 @@ module PrismChecker
       sections: {
         string: [ItemChecker::Elements::String],
         regexp: [ItemChecker::Elements::Regexp],
-        array: [ItemChecker::Elements::Array]
+        array: [ItemChecker::Elements::Array],
+        number: [ItemChecker::Elements::Number]
       },
 
       element: {
@@ -44,28 +47,59 @@ module PrismChecker
       elements: {
         string: [ItemChecker::Elements::String],
         regexp: [ItemChecker::Elements::Regexp],
-        array: [ItemChecker::Elements::Array]
+        array: [ItemChecker::Elements::Array],
+        number: [ItemChecker::Elements::Number]
       },
 
       image: {
         string: [ItemChecker::Image::String],
         regexp: [ItemChecker::Image::Regexp],
+        hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
       input: {
         string: [ItemChecker::Input::String],
         regexp: [ItemChecker::Input::Regexp],
+        hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
+      },
+
+      select: {
+        string: [ItemChecker::Input::String],
+        regexp: [ItemChecker::Input::Regexp],
+        hash: [ItemChecker::Element::Visible],
+        invisible: [ItemChecker::Element::Invisible]
+      },
+
+      checkbox: {
+        hash: [ItemChecker::Element::Visible],
+        invisible: [ItemChecker::Element::Invisible],
+        boolean: [ItemChecker::Checkbox::Boolean]
+      },
+
+      radio: {
+        hash: [ItemChecker::Element::Visible],
+        invisible: [ItemChecker::Element::Invisible],
+        boolean: [ItemChecker::Checkbox::Boolean]
       },
 
       array: {
         string: [ItemChecker::Array::String],
-        regexp: [ItemChecker::Array::Regexp]
+        regexp: [ItemChecker::Array::Regexp],
+        number: [ItemChecker::Elements::Number]
+      },
+
+      boolean: {
+        boolean: [ItemChecker::Any::Any]
+      },
+
+      number: {
+        number: [ItemChecker::Any::Any]
       },
 
       string: {
-        string: [ItemChecker::String::String],
+        string: [ItemChecker::Any::Any],
         regexp: [ItemChecker::String::Regexp]
       },
 
@@ -77,18 +111,16 @@ module PrismChecker
 
     def self.checkers(element, expectation)
       item_type = ItemClassifier.classify(element)
-      element_expectations = @check_map[item_type]
+      expectation_type = ExpectationClassifier.classify(expectation)
+      puts "#{item_type} --> #{expectation_type}"
 
-      puts "#{item_type} --> ..."
+      element_expectations = @check_map[item_type]
 
       raise_bad_element(element) unless element_expectations
 
-      expectation_type = ExpectationClassifier.classify(expectation)
       checkers = element_expectations[expectation_type]
 
       raise_bad_expectation(element, expectation) unless checkers
-
-      puts "#{item_type} --> #{expectation_type}"
 
       checkers
     end

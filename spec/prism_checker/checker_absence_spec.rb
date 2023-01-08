@@ -34,7 +34,7 @@ describe PrismChecker::Checker do
 
         let(:expectation) { { posts: :absent } }
 
-        it 'result is failure and report contains description' do
+        it 'the result is an error and a report with a description' do
           checker.check(page, expectation)
           expect(checker).to fail_with_report report
         end

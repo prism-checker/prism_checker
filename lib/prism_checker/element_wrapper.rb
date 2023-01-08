@@ -17,7 +17,10 @@ module PrismChecker
         return @element.send(method, *args)
       end
 
-      return @element.checked? if ItemClassifier.element_checkbox?(@element) && method == :checked
+      if (ItemClassifier.element_checkbox?(@element) || ItemClassifier.element_radio?(@element)) && method == :checked
+        return @element.checked?
+      end
+
 
       @element[method]
     end
