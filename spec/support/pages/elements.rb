@@ -22,6 +22,9 @@ class Elements < SitePrism::Page
   elements :text_elements, 'div.text-element'
   elements :images, 'img.image'
 
+  element :radio_selected, 'input#radio1'
+  element :radio_unselected, 'input#radio2'
+
   def inputs_value
     inputs.map(&:value)
   end

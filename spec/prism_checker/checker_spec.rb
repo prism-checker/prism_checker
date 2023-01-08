@@ -9,7 +9,7 @@ describe PrismChecker::Checker do
   let(:page) { Blog.new }
 
   describe '.check' do
-    context 'when page contains wrong number of child sections' do
+    context 'when page contains the wrong number of sections' do
       before do
         page.load
       end
@@ -18,7 +18,7 @@ describe PrismChecker::Checker do
         {
           header: 'My Blog',
           posts: {
-            post: [{}, {}, {}],
+            post: 3,
             header: 'Posts'
           }
         }
@@ -38,13 +38,13 @@ describe PrismChecker::Checker do
         REPORT
       end
 
-      it 'result is failure' do
+      it 'the result is an error and a report with a description' do
         checker.check(page, expectation)
         expect(checker).to fail_with_report(expected_report)
       end
     end
 
-    context 'when page contains wrong section inside array of sections' do
+    context 'when page contains the wrong section inside array of sections' do
       before do
         page.load
       end
@@ -77,7 +77,7 @@ describe PrismChecker::Checker do
         REPORT
       end
 
-      it 'result is failure' do
+      it 'the result is an error and a report with a description' do
         checker.check(page, expectation)
         expect(checker).to fail_with_report(expected_report)
       end

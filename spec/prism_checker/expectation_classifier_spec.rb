@@ -48,6 +48,12 @@ describe PrismChecker::ExpectationClassifier do
       end
     end
 
+    context 'when expectation is integer' do
+      it 'result is :number' do
+        expect(classifier.classify(2)).to eq :number
+      end
+    end
+
     context 'when expectation is something unusual' do
       it 'result is :other' do
         expect(classifier.classify(Class)).to eq :other

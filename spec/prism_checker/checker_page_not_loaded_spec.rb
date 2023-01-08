@@ -13,7 +13,7 @@ describe PrismChecker::Checker do
       let(:expectation) { {} }
       let(:expected_report) { 'Fail: Page is not loaded' }
 
-      it 'result is failure' do
+      it 'the result is an error and a report with a description' do
         checker.check(page, expectation)
         expect(checker).to fail_with_report(expected_report)
       end

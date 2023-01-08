@@ -30,7 +30,7 @@ describe PrismChecker::Checker do
           REPORT
         end
 
-        it 'result is failure' do
+        it 'the result is an error and a report with a description' do
           checker.check(page, expectation)
           expect(checker).to fail_with_report(expected_report)
         end
@@ -52,7 +52,7 @@ describe PrismChecker::Checker do
           REPORT
         end
 
-        it 'result is success' do
+        it 'the result is an error and a report with a description' do
           checker.check(page, expectation)
           expect(checker).to fail_with_report(expected_report)
         end

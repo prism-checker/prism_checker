@@ -9,7 +9,7 @@ describe PrismChecker::Checker do
   let(:page) { Elements.new }
 
   describe '.check' do
-    context 'when expectation for element is defined as hash' do
+    context 'when expectation for element is defined as hash and element is not valid' do
       before do
         page.load
       end
@@ -38,11 +38,10 @@ describe PrismChecker::Checker do
         REPORT
       end
 
-      it 'result is failure' do
+      it 'the result is an error and a report with a description' do
         checker.check(page, expectation)
         expect(checker).to fail_with_report(expected_report)
       end
     end
   end
 end
-
