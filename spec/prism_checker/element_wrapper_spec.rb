@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../support/pages/blog'
+require_relative '../support/pages/blog'
 require 'prism_checker/element_wrapper'
 
 describe PrismChecker::ElementWrapper do

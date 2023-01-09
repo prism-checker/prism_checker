@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'prism_checker/checker'
-require_relative '../../support/pages/blog'
+require_relative '../support/pages/blog'
 
 describe PrismChecker::Checker do
   subject(:checker) { described_class.new }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../../support/pages/elements'
-require_relative '../../support/pages/sections'
+require_relative '../support/pages/elements'
+require_relative '../support/pages/sections'
 require 'prism_checker/item_classifier'
 
 describe PrismChecker::ItemClassifier do
