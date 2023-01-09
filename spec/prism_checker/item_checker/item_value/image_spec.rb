@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'prism_checker/item_checker/item_value/image'
-require_relative '../../../../support/pages/elements'
+require_relative '../../../support/pages/elements'
 
 describe PrismChecker::ItemChecker::ItemValue::Image do
   let(:item_value) { extend described_class }

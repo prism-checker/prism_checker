@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../support/pages/blog'
+require_relative '../support/pages/blog'
 require 'prism_checker/checker'
 require 'prism_checker/absence_expectation'
 

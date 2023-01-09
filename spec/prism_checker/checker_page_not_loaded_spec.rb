@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../support/pages/page_not_loaded'
+require_relative '../support/pages/page_not_loaded'
 require 'prism_checker/checker'
 
 describe PrismChecker::Checker do

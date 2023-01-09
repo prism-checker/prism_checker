@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../support/pages/elements'
+require_relative '../support/pages/elements'
 require 'prism_checker/checker'
 
 describe PrismChecker::Checker do
