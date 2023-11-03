@@ -8,13 +8,14 @@ describe PrismChecker::CheckDispatcher do
   describe '#checkers' do
     context 'when element and expectation are valid' do
       it 'result is array of checkers' do
-        expect(dispatcher.checkers('string', 'string')).to be_an Array
+        pp dispatcher.checkers('string', 'string', :input)
+        expect(dispatcher.checkers('string', 'string', :input)).to be_an Array
       end
     end
 
     context 'when element is unknown' do
       it 'dispatcher raises error' do
-        expect { dispatcher.checkers(1...2, 'string') }
+        expect { dispatcher.checkers(1...2, 'string', :other) }
           .to raise_error(PrismChecker::Node::BadExpectation)
           .with_message("Don't know how to check Range")
       end
@@ -22,7 +23,7 @@ describe PrismChecker::CheckDispatcher do
 
     context 'when expectation is unknown' do
       it 'dispatcher raises error' do
-        expect { dispatcher.checkers('string', 1...2) }
+        expect { dispatcher.checkers('string', 1...2, :string) }
           .to raise_error(PrismChecker::Node::BadExpectation)
           .with_message("Don't know how to compare String with Range")
       end

@@ -1,7 +1,5 @@
 <template>
-  <div
-    :class="loading ? 'loading' : 'app'"
-  >
+  <div :class="loading ? 'loading' : 'app'">
     <template v-if="loading">
       <div>Loading...</div>
     </template>

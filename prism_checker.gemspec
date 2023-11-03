@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'selenium-webdriver', ['>= 3.13', '< 4.1']
   s.add_development_dependency 'simplecov', ['~> 0.18']
   s.add_development_dependency 'webdrivers', ['~> 4.6']
+  s.add_development_dependency 'ruby-prof'
 end

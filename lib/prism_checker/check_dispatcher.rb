@@ -109,10 +109,8 @@ module PrismChecker
       }
     }
 
-    def self.checkers(element, expectation)
-      item_type = ItemClassifier.classify(element)
+    def self.checkers(element, expectation, item_type)
       expectation_type = ExpectationClassifier.classify(expectation)
-      puts "#{item_type} --> #{expectation_type}"
 
       element_expectations = @check_map[item_type]
 

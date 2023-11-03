@@ -33,7 +33,7 @@ module PrismChecker
 
       @result = true
     rescue Node::CheckFail
-      puts report
+      # puts report
       @result = false
       # rescue Node::BadExpectation => e
       #   # raise

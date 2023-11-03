@@ -15,5 +15,3 @@ npm run dev
 ```sh
 npm run build
 ```
-
-https://colorscheme.ru/#3l22bumqQU8RR

@@ -4,6 +4,7 @@ require_relative 'check_fail'
 require_relative 'bad_expectation'
 require_relative '../element_wrapper'
 require_relative '../absence_expectation'
+require_relative '../item_classifier'
 
 module PrismChecker
   module Node
@@ -14,11 +15,13 @@ module PrismChecker
         @parent = parent
         @checker = checker
         @name = name
-        @expectation = expectation == :absent ? AbsenceExpectation.new(1) : expectation
+        @expectation = expectation == :absent ? AbsenceExpectation.new(1) : expectation # TODO: expectation time!
         @element = nil
         @status = 'Not checked'
         @error = nil
         @timeout = Capybara.default_max_wait_time
+        @type = nil
+        @checked_element = nil
       end
 
       def root?
@@ -34,6 +37,8 @@ module PrismChecker
       end
 
       def element
+        return @checked_element if @checked_element
+
         if root?
           @checker.item
         elsif parent.is_a?(Node::Hash)
@@ -47,8 +52,8 @@ module PrismChecker
         end
       end
 
-      def wait_until_true(&block)
-        SitePrism::Waiter.wait_until_true(@timeout, &block)
+      def wait_until_true(timeout = @timeout, &block)
+        SitePrism::Waiter.wait_until_true(timeout, &block)
       rescue SitePrism::TimeoutError
         false
       end
@@ -70,31 +75,42 @@ module PrismChecker
         sleep expectation.delay
 
         check_wrapper do
-          result = wait_until_true do
-            element
-            false
-          rescue Capybara::ElementNotFound
-            true
+          result = wait_until_true(0.1) do
+            parent.element.public_send("has_no_#{name}?")
+          #   element
+          #   false
+          # rescue Capybara::ElementNotFound
+          #   true
           end
 
           raise Node::CheckFail, 'Element is present' unless result
         end
       end
 
+      def type(element)
+        @type ||= ItemClassifier.classify(element)
+      end
+
       def check
         return check_absence if expectation.is_a?(AbsenceExpectation)
 
         check_wrapper do
-          checkers = CheckDispatcher.checkers(element, expectation)
+          element = self.element
+          element_type = type(element)
+          checkers = CheckDispatcher.checkers(element, expectation, element_type)
           value = nil
           checkers.each do |checker|
             result = wait_until_true do
+              element = self.element if element.is_a? ::Array
+
               value = checker.send(:value, element)
               checker.send(:check, element, value, expectation)
             end
 
             raise Node::CheckFail, checker.send(:error_message, element, value, expectation) unless result
           end
+
+          @checked_element = element
         end
       end
     end

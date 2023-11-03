@@ -1,0 +1,28 @@
+<html>
+  <body>
+    <h1>Performance test</h1>
+
+    <ol class="ol-lvl-1">
+      <% 0.upto(2) do |i| %>
+        <li class="li-lvl-1">
+          <ul class="ul-lvl-2">
+            <% 0.upto(2) do |j| %>
+              <li class="li-lvl-2">
+                <% 0.upto(2) do |k| %>
+                  <div class="div-lvl-3">
+                    <span style="font-weight: bold">
+                      <%= i %>.<%= j %>.<%= k %>
+                    </span>
+                    <p>
+                      Foo bar
+                    </p>
+                  </div>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+    </ol>
+  </body>
+</html>
