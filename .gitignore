@@ -3,3 +3,4 @@ coverage/*
 .idea
 .env
 .byebug_history
+.ruby-version

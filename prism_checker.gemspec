@@ -6,9 +6,9 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.5'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'BSD-3-Clause'
-  s.authors     = ['BM']
-  s.email       = %w[todo@gmail.com] # TODO
-  # s.homepage    = 'TODO'
+  s.authors     = ['Ganglion-17']
+  s.email       = %w[ganglion1717@gmail.com]
+  s.homepage    = 'https://github.com/prism-checker/prism_checker'
   s.summary     = 'A matcher for SitePrism'
   s.description = 'Matcher gives you a simple and clean describing your site'
   s.files        = Dir.glob('lib/**/*') + %w[LICENSE.md README.md]
