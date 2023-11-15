@@ -6,6 +6,7 @@ module PrismChecker
       %i[checkbox element_checkbox?],
       %i[radio element_radio?],
       %i[input element_input?],
+      %i[textarea element_textarea?],
       %i[select element_select?],
       %i[image element_image?],
       %i[element element?],
@@ -75,6 +76,13 @@ module PrismChecker
     def self.element_input?(element)
       return false unless element?(element)
       return false unless element.tag_name == 'input'
+
+      true
+    end
+
+    def self.element_textarea?(element)
+      return false unless element?(element)
+      return false unless element.tag_name == 'textarea'
 
       true
     end

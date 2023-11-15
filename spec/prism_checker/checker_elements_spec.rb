@@ -41,13 +41,15 @@ describe PrismChecker::Checker do
     context 'with valid textarea' do
       context 'when textarea described as string' do
         it 'result is success' do
-          expect(checker.check(page, textarea: 'textarea value')).to eq true
+          page.textarea.set('value')
+          expect(checker.check(page, textarea: 'value')).to eq true
         end
       end
 
       context 'when textarea described as hash' do
         it 'result is success' do
-          expect(checker.check(page, textarea: { text: 'textarea value', value: 'textarea value', 'data-foo' => 'foo' })).to eq true
+          page.textarea.set('value')
+          expect(checker.check(page, textarea: { text: 'textarea value', value: 'value', 'data-foo' => 'foo' })).to eq true
         end
       end
     end

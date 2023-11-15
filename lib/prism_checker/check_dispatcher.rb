@@ -11,6 +11,7 @@ require_relative 'item_checker/checkbox'
 require_relative 'item_checker/any'
 require_relative 'item_checker/page'
 require_relative 'item_checker/string'
+require_relative 'item_checker/textarea'
 require_relative 'item_checker/nil'
 require_relative 'node/bad_expectation'
 
@@ -61,6 +62,13 @@ module PrismChecker
       input: {
         string: [ItemChecker::Input::String],
         regexp: [ItemChecker::Input::Regexp],
+        hash: [ItemChecker::Element::Visible],
+        invisible: [ItemChecker::Element::Invisible]
+      },
+
+      textarea: {
+        string: [ItemChecker::Textarea::String],
+        regexp: [ItemChecker::Textarea::Regexp],
         hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },

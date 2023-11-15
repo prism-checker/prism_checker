@@ -43,6 +43,12 @@ describe PrismChecker::ItemClassifier do
         end
       end
 
+      context 'when tag <textarea>' do
+        it 'result is :textarea' do
+          expect(classifier.classify(page.textarea)).to eq :textarea
+        end
+      end
+
       context 'when tag <select>' do
         it 'result is :select' do
           expect(classifier.classify(page.select)).to eq :select

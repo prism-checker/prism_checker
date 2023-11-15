@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require_relative 'item_value/input'
+require_relative 'item_value/textarea'
 require_relative 'item_check/string'
 require_relative 'item_check/regexp'
 
 module PrismChecker
   module ItemChecker
-    module Input
+    module Textarea
       class String
-        extend ItemValue::Input
+        extend ItemValue::Textarea
         extend ItemCheck::String
       end
 
       class Regexp
-        extend ItemValue::Input
+        extend ItemValue::Textarea
         extend ItemCheck::Regexp
       end
     end
