@@ -1,0 +1,28 @@
+name: Test
+
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+        with:
+          chrome-version: 114
+
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
+      - name: Run tests
+        env:
+          CHROMEDRIVER_VERSION: 114.0.5735.16
+          BROWSER_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
+        run: bundle exec rspec spec
