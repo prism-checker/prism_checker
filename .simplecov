@@ -8,4 +8,4 @@ SimpleCov.start do
 end
 
 SimpleCov.minimum_coverage 99
-SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
+SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter if ENV['CC_TEST_REPORTER_ID']
