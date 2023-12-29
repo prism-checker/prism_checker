@@ -22,19 +22,16 @@ jobs:
           ruby-version: 2.7
           bundler-cache: true
 
-      - name: Setup Code Climate test-reporter
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
-
       - name: Run tests
         env:
           CHROMEDRIVER_VERSION: 114.0.5735.16
           BROWSER_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
         run: bundle exec rspec spec
 
-      - name: Publish code coverage
-        run: |
-          export GIT_BRANCH=main
-          ./cc-test-reporter after-build -r 44a8b2c6cf8d7627b384f07d3a27e73d7e12485c00eab6deeea489bca59dbdcb
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v5.0.0
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/coverage:simplecov
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
