@@ -28,6 +28,12 @@ jobs:
           BROWSER_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
         run: bundle exec rspec spec
 
+      - run: |
+          pwd
+          ls -1
+          echo ${{github.workspace}}
+          ls ${{github.workspace}}/coverage
+
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         with:
