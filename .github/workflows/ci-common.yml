@@ -33,6 +33,7 @@ jobs:
           pwd
           ls -a1
           echo ${{github.workspace}}
+          echo ${{secrets.CC_TEST_REPORTER_ID}}
           ls -a1 ${{github.workspace}}/coverage
 
       - name: Test & publish code coverage
