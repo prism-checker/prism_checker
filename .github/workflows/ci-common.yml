@@ -1,6 +1,10 @@
 name: CI-common
 
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      CC_TEST_REPORTER_ID:
+        required: true
 
 permissions:
   contents: read

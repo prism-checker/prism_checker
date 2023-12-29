@@ -11,3 +11,5 @@ permissions:
 jobs:
   call-workflow:
     uses: ./.github/workflows/ci-common.yml
+    secrets:
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
