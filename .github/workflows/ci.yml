@@ -29,12 +29,6 @@ jobs:
           SIMPLE_COV_JSON_FORMATTER: SIMPLE_COV_JSON_FORMATTER
         run: bundle exec rspec spec
 
-      - run: |
-          pwd
-          ls -a1
-          echo ${{github.workspace}}
-          ls -a1 ${{github.workspace}}/coverage
-
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         with:
