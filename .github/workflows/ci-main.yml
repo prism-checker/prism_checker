@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   call-workflow:
-    uses: prism-checker/prism_checker/actions/workflows/ci.yml
+    uses: ./.github/workflows/ci.yml
