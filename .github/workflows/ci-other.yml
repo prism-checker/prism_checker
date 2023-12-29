@@ -1,13 +1,13 @@
-name: CI
+name: CI-other-branches
 
 on:
   push:
     branches-ignore:
-      - 'main'
+      - main
 
 permissions:
   contents: read
 
 jobs:
   call-workflow:
-    uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/ci-common.yml
