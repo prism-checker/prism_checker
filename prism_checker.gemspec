@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-rspec', ['~> 2.2.0']
   s.add_development_dependency 'selenium-webdriver', ['>= 3.13', '< 4.1']
   s.add_development_dependency 'simplecov', ['~> 0.22']
+  s.add_development_dependency 'simplecov_json_formatter'
   s.add_development_dependency 'webdrivers', ['~> 4.6']
   s.add_development_dependency 'ruby-prof'
 end
