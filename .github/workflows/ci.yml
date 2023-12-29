@@ -21,8 +21,24 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
+
       - name: Run tests
         env:
           CHROMEDRIVER_VERSION: 114.0.5735.16
           BROWSER_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
+          SIMPLE_COV_JSON_FORMATTER: SIMPLE_COV_JSON_FORMATTER
         run: bundle exec rspec spec
+
+      - run: |
+          pwd
+          ls -a1
+          echo ${{github.workspace}}
+          ls -a1 ${{github.workspace}}/coverage
+
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v5.0.0
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/coverage/coverage.json:simplecov
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
