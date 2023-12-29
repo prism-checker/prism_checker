@@ -1,6 +1,10 @@
-name: CI
+name: CI-common
 
-on: [push]
+on:
+  workflow_call:
+    secrets:
+      CC_TEST_REPORTER_ID:
+        required: true
 
 permissions:
   contents: read
@@ -33,6 +37,7 @@ jobs:
           pwd
           ls -a1
           echo ${{github.workspace}}
+          echo ${{secrets.CC_TEST_REPORTER_ID}}
           ls -a1 ${{github.workspace}}/coverage
 
       - name: Test & publish code coverage
