@@ -33,7 +33,7 @@ describe PrismChecker::Checker do
 
       context 'when input described as hash' do
         it 'result is success' do
-          expect(checker.check(page, input: { value: 'input value', id: 'input' })).to eq true
+          expect(checker.check(page, input: { value: 'input value', class: 'foo' })).to eq true
         end
       end
     end

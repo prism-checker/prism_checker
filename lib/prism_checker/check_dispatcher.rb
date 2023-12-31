@@ -60,8 +60,8 @@ module PrismChecker
       },
 
       input: {
-        string: [ItemChecker::Input::String],
-        regexp: [ItemChecker::Input::Regexp],
+        string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
+        regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
         hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
@@ -83,7 +83,7 @@ module PrismChecker
       checkbox: {
         hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible],
-        boolean: [ItemChecker::Checkbox::Boolean]
+        boolean: [ItemChecker::Element::Visible, ItemChecker::Checkbox::Boolean]
       },
 
       radio: {
@@ -107,7 +107,7 @@ module PrismChecker
       },
 
       string: {
-        string: [ItemChecker::Any::Any],
+        string: [ItemChecker::String::String],
         regexp: [ItemChecker::String::Regexp]
       },
 
