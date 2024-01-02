@@ -21,7 +21,6 @@ module PrismChecker
         return @element.checked?
       end
 
-
       @element[method]
     end
 
