@@ -53,8 +53,8 @@ module PrismChecker
       },
 
       image: {
-        string: [ItemChecker::Image::String],
-        regexp: [ItemChecker::Image::Regexp],
+        string: [ItemChecker::Element::Visible, ItemChecker::Image::String],
+        regexp: [ItemChecker::Element::Visible, ItemChecker::Image::Regexp],
         hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
@@ -87,9 +87,11 @@ module PrismChecker
       },
 
       radio: {
+        string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
+        regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
         hash: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible],
-        boolean: [ItemChecker::Checkbox::Boolean]
+        boolean: [ItemChecker::Element::Visible, ItemChecker::Checkbox::Boolean]
       },
 
       array: {
@@ -117,7 +119,7 @@ module PrismChecker
       }
     }
 
-    def self.checkers(element, expectation, item_type)
+    def self.checkers(_node, element, expectation, item_type)
       expectation_type = ExpectationClassifier.classify(expectation)
 
       element_expectations = @check_map[item_type]

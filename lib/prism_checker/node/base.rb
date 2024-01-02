@@ -87,6 +87,18 @@ module PrismChecker
         end
       end
 
+      def path
+        result = []
+        p = self
+
+        while p.is_a? Base
+          result << p.name
+          p = p.parent
+        end
+
+        result.reverse
+      end
+
       def type(element)
         @type ||= ItemClassifier.classify(element)
       end
@@ -97,7 +109,7 @@ module PrismChecker
         check_wrapper do
           element = self.element
           element_type = type(element)
-          checkers = CheckDispatcher.checkers(element, expectation, element_type)
+          checkers = CheckDispatcher.checkers(self, element, expectation, element_type)
           value = nil
           checkers.each do |checker|
             result = wait_until_true do
