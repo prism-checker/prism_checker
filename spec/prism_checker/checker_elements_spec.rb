@@ -40,9 +40,17 @@ describe PrismChecker::Checker do
 
     context 'with valid textarea' do
       context 'when textarea described as string' do
-        it 'result is success' do
-          page.textarea.set('value')
-          expect(checker.check(page, textarea: 'value')).to eq true
+        context 'when content defined as text (<textarea>textarea value</textarea>)' do
+          it 'result is success' do
+            expect(checker.check(page, textarea: 'textarea value')).to eq true
+          end
+        end
+
+        context 'when content defined as value (via JS)' do
+          it 'result is success' do
+            page.textarea.set('JS value')
+            expect(checker.check(page, textarea: 'JS value')).to eq true
+          end
         end
       end
 
