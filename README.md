@@ -21,7 +21,7 @@ gem install prism_checker_minitest
 
 Page and Page Object Model:
 
-![Cart](images/cart.png "Cart")
+![Cart](doc/images/cart.png "Cart")
 
 ```ruby
 class Cart < SitePrism::Page
@@ -250,8 +250,8 @@ expect(page).to be_like(input: 'Some text')
 ```
 ```ruby
 expect(page.input).to be_like(
-  value: 'Some text', 
-  class: 'input',        
+  value: 'Some text',
+  class: 'input',
   readonly: false,
   disabled: false
 )
@@ -276,7 +276,7 @@ expect(page).to be_like(button: 'Button')
 ```
 ```ruby
 expect(page.button).to be_like(
-  text: 'Button', 
+  text: 'Button',
   disabled: false
 )
 
@@ -297,7 +297,7 @@ expect(page).to be_like(textarea: 'Some text')
 ```
 ```ruby
 expect(page.textarea).to be_like(
-  value: /Some text/, 
+  value: /Some text/,
   class: 'textarea'
 )
 
@@ -319,7 +319,7 @@ expect(page).to be_like(image: /logo.png$/)
 ```
 ```ruby
 expect(page.image).to be_like(
-  src: 'logo.png', 
+  src: 'logo.png',
   class: 'logo',
   alt: 'Logo'
 )
@@ -360,8 +360,8 @@ expect(page).to be_like(radios: [
 ```
 ```ruby
 expect(page).to be_like(radios: [
-  false, 
-  true, 
+  false,
+  true,
   false
 ])
 
@@ -400,7 +400,7 @@ expect(page).to be_like(checkboxes: [
 ```
 ```ruby
 expect(page).to be_like(checkboxes: [
-  false, 
+  false,
   true
 ])
 
@@ -428,13 +428,13 @@ expect(page.checkboxes[0]).to be_like(
 
 ```ruby
 expect(page).to be_like(selects: [
-  { 
-    value: /^$/, 
-    id: 'select-not-selected' 
+  {
+    value: /^$/,
+    id: 'select-not-selected'
   },
-  { 
-    value: 'option2', 
-    id: 'select-selected' 
+  {
+    value: 'option2',
+    id: 'select-selected'
   }
 ])
 
