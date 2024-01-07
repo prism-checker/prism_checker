@@ -2,9 +2,9 @@
 
 module PrismChecker
   class ReportBuilder
-    def initialize(root, colorizer)
+    def initialize(root)
       @root = root
-      @colorizer = colorizer
+      @colorizer = PrismChecker.colorizer
     end
 
     def build

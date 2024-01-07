@@ -15,7 +15,6 @@ module PrismChecker
         @parent = parent
         @checker = checker
         @name = name
-        # @expectation = expectation == :absent ? AbsenceExpectation.new(Capybara.default_max_wait_time / 2.0) : expectation
         @expectation = build_expectation(expectation)
         @element = nil
         @status = 'Not checked'
@@ -90,10 +89,6 @@ module PrismChecker
         check_wrapper do
           result = wait_until_true(0.1) do
             parent.element.public_send("has_no_#{name}?")
-          #   element
-          #   false
-          # rescue Capybara::ElementNotFound
-          #   true
           end
 
           raise Node::CheckFail, 'Element is present' unless result
@@ -128,11 +123,13 @@ module PrismChecker
             result = wait_until_true do
               element = self.element if element.is_a? ::Array
 
-              value = checker.send(:value, element)
-              checker.send(:check, element, value, expectation)
+              value = checker.value(element)
+              checker.check(element, value, expectation)
             end
 
-            raise Node::CheckFail, checker.send(:error_message, element, value, expectation) unless result
+            unless result
+              raise Node::CheckFail, checker.error_message(element, value, expectation)
+            end
           end
 
           @checked_element = element

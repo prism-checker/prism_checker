@@ -15,7 +15,6 @@ module PrismChecker
     ]
 
     def self.classify(expectation)
-
       @expectations_map.each do |data|
         type = data[0]
         probe = data[1]
