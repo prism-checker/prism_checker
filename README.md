@@ -2,6 +2,108 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/c497733cb53175decd0f/maintainability)](https://codeclimate.com/github/prism-checker/prism_checker/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c497733cb53175decd0f/test_coverage)](https://codeclimate.com/github/prism-checker/prism_checker/test_coverage)
 
+## Overview
+
+For example, we need to test the online shop cart:
+
+![Cart](doc/images/cart.png "Cart")
+
+Corresponding SitePrism PDO::
+
+```ruby
+class Cart < SitePrism::Page
+  set_url '/cart.html'
+
+  element :header, 'h1'
+
+  sections :cart_items, '[data-test="cart-item"]' do
+    element :name, '[data-test="cart-item-name"]'
+    element :image, '[data-test="cart-item-image"]'
+    element :price, '[data-test="cart-item-price"]'
+    element :quantity, '[data-test="cart-item-quantity"]'
+    element :total, '[data-test="cart-item-total"]'
+  end
+
+  section :checkout, '[data-test="cart-checkout"]' do
+    element :total, '[data-test="cart-checkout-total"]'
+    element :checkout_button, '[data-test="cart-checkout-button"]'
+  end
+end
+```
+
+A typical test would look like this:
+
+```ruby
+describe 'Cart' do
+  it 'is correct' do
+    page = Cart.new
+    page.load
+    
+    expect(page.header.text).to eq('Shopping Cart')
+
+    expect(page.cart_items.size).to eq(2)
+
+    expect(page.cart_items[0].visible?).to be_truthy
+    expect(page.cart_items[0].name.text).to match('Cup')
+    expect(page.cart_items[0].quantity.value).to match('1')
+    expect(page.cart_items[0].image[:src]).to match('cup.png')
+    expect(page.cart_items[0].price.text).to match('19.00')
+    expect(page.cart_items[0].total.text).to match('19.00')
+
+    expect(page.cart_items[1].visible?).to be_truthy
+    expect(page.cart_items[1].name.text).to match('Cap')
+    expect(page.cart_items[1].quantity.value).to match('2')
+    expect(page.cart_items[1].image[:src]).to match('cap.png')
+    expect(page.cart_items[1].price.text).to match('24.00')
+    expect(page.cart_items[1].total.text).to match('48.00')
+
+    expect(page.checkout.visible?).to be_truthy
+    expect(page.checkout.total.text).to match('67.99')
+    expect(page.checkout.checkout_button.text).to match('Checkout')
+  end
+end
+```
+
+Using gem prism_checker, the same test will look much cleaner and simpler:
+
+```ruby
+describe 'Cart' do
+  it 'is correct' do
+    page = Cart.new
+    page.load
+
+    expect(page).to be_like(
+      header: 'Shopping Cart',
+      cart_items: [
+        {
+          name: 'Cup',
+          quantity: '1',
+          image: 'cup.png',
+          price: '19.00',
+          total: '19.00'
+        },
+        {
+          name: 'Cap',
+          quantity: '2',
+          image: 'cap.png',
+          price: '24.00',
+          total: '48.00'
+        }
+      ],
+      checkout: {
+        total: '67.00',
+        checkout_button: 'Checkout'
+      }
+    )
+  end
+end
+
+```
+
+In case of errors, an easy-to-read message will be displayed:
+
+![Result](doc/images/result.png "Result")
+
 ## Install
 To install PrismChecker:
 
@@ -50,7 +152,7 @@ expect(page).to be_like('Shopping Cart')
 
 # Same as
 # expect(page.loaded?).to eq(true)
-# expect(page.text).to match('Shopping Cart')
+# expect(page).to match('Shopping Cart')
 ```
 
 
@@ -250,8 +352,8 @@ expect(page).to be_like(input: 'Some text')
 ```
 ```ruby
 expect(page.input).to be_like(
-  value: 'Some text',
-  class: 'input',
+  value: 'Some text', 
+  class: 'input',        
   readonly: false,
   disabled: false
 )
@@ -276,7 +378,7 @@ expect(page).to be_like(button: 'Button')
 ```
 ```ruby
 expect(page.button).to be_like(
-  text: 'Button',
+  text: 'Button', 
   disabled: false
 )
 
@@ -293,11 +395,12 @@ expect(page).to be_like(textarea: 'Some text')
 
 # Same as
 # expect(page.loaded?).to eq(true)
+# expect(page.textarea.visible?).to eq(true)
 # expect(page.textarea.value).to match('Some text')
 ```
 ```ruby
 expect(page.textarea).to be_like(
-  value: /Some text/,
+  value: /Some text/, 
   class: 'textarea'
 )
 
@@ -319,7 +422,7 @@ expect(page).to be_like(image: /logo.png$/)
 ```
 ```ruby
 expect(page.image).to be_like(
-  src: 'logo.png',
+  src: 'logo.png', 
   class: 'logo',
   alt: 'Logo'
 )
@@ -360,8 +463,8 @@ expect(page).to be_like(radios: [
 ```
 ```ruby
 expect(page).to be_like(radios: [
-  false,
-  true,
+  false, 
+  true, 
   false
 ])
 
@@ -400,7 +503,7 @@ expect(page).to be_like(checkboxes: [
 ```
 ```ruby
 expect(page).to be_like(checkboxes: [
-  false,
+  false, 
   true
 ])
 
@@ -428,13 +531,13 @@ expect(page.checkboxes[0]).to be_like(
 
 ```ruby
 expect(page).to be_like(selects: [
-  {
-    value: /^$/,
-    id: 'select-not-selected'
+  { 
+    value: /^$/, 
+    id: 'select-not-selected' 
   },
-  {
-    value: 'option2',
-    id: 'select-selected'
+  { 
+    value: 'option2', 
+    id: 'select-selected' 
   }
 ])
 
@@ -447,4 +550,121 @@ expect(page).to be_like(selects: [
 # expect(page.selects[1].visible?).to eq(true)
 # expect(page.selects[1].value).to match('option2')
 # expect(page.selects[1].id).to match('select-selected')
+```
+### Visibility
+Page Object Model:
+```ruby
+class Visibility < SitePrism::Page
+  set_url '/visibility.html'
+
+  elements :list_items, 'li'
+  section  :article, 'article' do
+    # ...
+  end
+end
+```
+
+#### Element or section
+
+```ruby
+expect(page).to be_like(article: :invisible)
+
+# Same as
+# expect(page.loaded?).to eq(true)
+# expect(page.article.invisible?).to eq(true)
+```
+
+#### Elements or sections
+
+```ruby
+expect(page).to be_like(list_items: [
+  'Element 1', 
+  :invisible, 
+  :invisible, 
+  :visible
+])
+
+# Same as
+# expect(page.loaded?).to eq(true)
+# expect(page.list_items.size).to eq(["Element 1", :invisible, :invisible, :visible].size)
+# expect(page.list_items[0].visible?).to eq(true)
+# expect(page.list_items[0].text).to match('Element 1')
+# expect(page.list_items[1].invisible?).to eq(true)
+# expect(page.list_items[2].invisible?).to eq(true)
+# expect(page.list_items[3].visible?).to eq(true)
+```
+### Absence
+Page Object Model:
+```ruby
+class Visibility < SitePrism::Page
+  set_url '/visibility.html'
+
+  elements :list_items, 'li'
+  section  :article, 'article' do
+    # ...
+  end
+end
+```
+
+#### Element or section
+
+```ruby
+expect(page).to be_like(article: :absent)
+
+# Same as
+# expect(page.loaded?).to eq(true)
+# expect(page.has_no_article?).to eq(true)
+```
+
+#### Delay before checking absence
+
+Sometimes we need to sleep before checking absence. Use :absent[delay in seconds]
+```ruby
+expect(page).to be_like(article: :absent3)
+
+# Same as
+# expect(page.loaded?).to eq(true)
+# sleep 3
+# expect(page.has_no_article?).to eq(true)
+```
+### String comparison
+
+#### Exact match and inclusion
+
+By default the inclusion of a substring in a string is checked
+```ruby
+PrismChecker.string_comparison = :inclusion # default value
+expect(page.header).to be_like('Shopping Cart')
+
+# Same as
+# expect(page.header.visible?).to eq(true)
+# expect(page.header.text).to match('Shopping Cart')
+```
+To compare strings exactly, use :exact
+```ruby
+PrismChecker.string_comparison = :exact
+expect(page.header).to be_like('Shopping Cart')
+
+# Same as
+# expect(page.header.visible?).to eq(true)
+# expect(page.header.text).to eq('Shopping Cart')
+```
+
+#### Empty string
+
+When the comparison method is :inclusion, and it is necessary to compare with an empty string, it can be done in this way
+```ruby
+expect(page.element_without_text).to be_like(:empty)
+
+# Same as
+# expect(page.element_without_text.visible?).to eq(true)
+# expect(page.element_without_text.text.empty?).to eq(true)
+```
+or
+```ruby
+expect(page.element_without_text).to be_like(/^$/)
+
+# Same as
+# expect(page.element_without_text.visible?).to eq(true)
+# expect(page.element_without_text.text).to match(/^$/)
 ```
