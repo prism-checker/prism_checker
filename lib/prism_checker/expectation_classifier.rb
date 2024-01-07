@@ -16,8 +16,7 @@ module PrismChecker
 
     def self.classify(expectation)
       @expectations_map.each do |data|
-        type = data[0]
-        probe = data[1]
+        type, probe = data
         if probe.is_a? Symbol
           return type if send(probe, expectation)
         elsif probe.call(expectation)
