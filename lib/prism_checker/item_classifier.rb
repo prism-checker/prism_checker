@@ -22,8 +22,7 @@ module PrismChecker
 
     def self.classify(element)
       @elements_map.each do |data|
-        type = data[0]
-        probe = data[1]
+        type, probe = data
         if probe.is_a? Symbol
           return type if send(probe, element)
         elsif probe.call(element)
