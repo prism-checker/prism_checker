@@ -29,8 +29,11 @@ class Elements < SitePrism::Page
     inputs.map(&:value)
   end
 
-  # section :select_selected1, Select, 'select#select-selected'
-  # section :select_unselected1, Select, 'select#select-unselected'
+  def empty_string
+    ''
+  end
 
-  # load_validation { has_header? }
+  def some_string
+    'String'
+  end
 end

@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
-# require 'colorize'
 require_relative 'node/base'
 require_relative 'node/hash'
 require_relative 'node/array'
 require_relative 'node/expectation'
 require_relative 'node/bad_expectation'
-require_relative 'colorizer'
-# require_relative 'expectation_checkers'
 require_relative 'report_builder'
 require_relative 'item_classifier'
 require_relative 'expectation_classifier'
@@ -16,11 +13,11 @@ module PrismChecker
   class Checker
     attr_reader :item, :root, :colorizer, :result
 
-    def initialize(colorizer: PrismChecker::Colorizer)
+    def initialize
       @item = nil
       @expectation = nil
       @root = nil
-      @colorizer = colorizer
+      @colorizer = PrismChecker.colorizer
       @result = nil
     end
 

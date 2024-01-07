@@ -9,9 +9,9 @@ require 'site_prism'
 require 'selenium-webdriver'
 require 'webdrivers'
 require 'readline'
-require_relative './custom_matchers'
+require 'dotenv/load'
 
-# Webdrivers::Chromedriver.required_version = '114.0.5735.16'
+require_relative './custom_matchers'
 
 Capybara.default_max_wait_time = 5
 
@@ -20,7 +20,7 @@ Webdrivers::Chromedriver.required_version = ENV['CHROMEDRIVER_VERSION'] if ENV['
 options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
   opts.binary = ENV['BROWSER_BINARY'] if ENV['BROWSER_BINARY']
   opts.add_argument('--no-sandbox')
-  opts.headless! unless ENV['DISABLE_HEADLESS_TESTS']
+  opts.headless! unless ENV['DISABLE_HEADLESS']
   opts.add_argument('--disable-dev-shm-usage')
   opts.add_argument('--disable-gpu')
 end

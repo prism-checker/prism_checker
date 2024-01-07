@@ -15,13 +15,26 @@ module PrismChecker
         @parent = parent
         @checker = checker
         @name = name
-        @expectation = expectation == :absent ? AbsenceExpectation.new(1) : expectation # TODO: expectation time!
+        # @expectation = expectation == :absent ? AbsenceExpectation.new(Capybara.default_max_wait_time / 2.0) : expectation
+        @expectation = build_expectation(expectation)
         @element = nil
         @status = 'Not checked'
         @error = nil
         @timeout = Capybara.default_max_wait_time
         @type = nil
         @checked_element = nil
+      end
+
+      def build_expectation(expectation)
+        if expectation.is_a?(Symbol) && expectation.start_with?('absent')
+          delay = expectation == :absent ? 0 : Integer(expectation.to_s.split('absent').last)
+
+          return AbsenceExpectation.new(delay)
+        end
+
+        expectation
+      rescue ArgumentError
+        expectation
       end
 
       def root?

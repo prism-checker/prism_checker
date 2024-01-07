@@ -3,6 +3,7 @@
 require_relative 'item_value/element'
 require_relative 'item_check/regexp'
 require_relative 'item_check/string'
+require_relative 'item_check/empty'
 
 module PrismChecker
   module ItemChecker
@@ -11,6 +12,11 @@ module PrismChecker
       class String
         extend ItemValue::Element
         extend ItemCheck::String
+      end
+
+      class Empty
+        extend ItemValue::Element
+        extend ItemCheck::Empty
       end
 
       class Regexp

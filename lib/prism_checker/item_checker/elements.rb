@@ -2,6 +2,8 @@
 
 require_relative 'item_check/string'
 require_relative 'item_check/regexp'
+require_relative 'item_check/number'
+require_relative 'item_check/empty_array'
 require_relative 'item_value/elements'
 
 module PrismChecker
@@ -36,13 +38,15 @@ module PrismChecker
           elements.size
         end
 
-        def self.check(_elements, value, expectation)
-          value == expectation
+        extend ItemCheck::Number
+      end
+
+      class Empty
+        def self.value(elements)
+          elements
         end
 
-        def self.error_message(_elements, value, expectation)
-          "Wrong elements count\nActual: #{value}\nExpected: #{expectation}"
-        end
+        extend ItemCheck::EmptyArray
       end
     end
   end
