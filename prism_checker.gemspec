@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov_json_formatter'
   s.add_development_dependency 'webdrivers', ['~> 4.6']
   s.add_development_dependency 'ruby-prof'
+  s.add_development_dependency 'dotenv'
 end

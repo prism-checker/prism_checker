@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../support/pages/blog'
-require 'prism_checker/checker'
+require 'prism_checker'
 
 describe PrismChecker::Checker do
   subject(:checker) { described_class.new }
@@ -21,7 +21,6 @@ describe PrismChecker::Checker do
       end
 
       context 'when expected visible section' do
-        let(:expectation) { { posts: {} } }
         let(:expected_report) do
           <<~REPORT.strip
             {
@@ -30,9 +29,22 @@ describe PrismChecker::Checker do
           REPORT
         end
 
-        it 'the result is an error and a report with a description' do
-          checker.check(page, expectation)
-          expect(checker).to fail_with_report(expected_report)
+        context 'when expectation defined as Hash' do
+          let(:expectation) { { posts: {} } }
+
+          it 'the result is an error and a report with a description' do
+            checker.check(page, expectation)
+            expect(checker).to fail_with_report(expected_report)
+          end
+        end
+
+        context 'when expectation defined as :visible' do
+          let(:expectation) { { posts: :visible } }
+
+          it 'the result is an error and a report with a description' do
+            checker.check(page, expectation)
+            expect(checker).to fail_with_report(expected_report)
+          end
         end
       end
     end

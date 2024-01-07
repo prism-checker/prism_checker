@@ -34,7 +34,7 @@ RSpec/MessageSpies:
   EnforcedStyle: receive
 
 RSpec/NestedGroups:
-  MaxNesting: 5
+  Max: 5
 
 # We don't need to document any testing code
 Style/Documentation:

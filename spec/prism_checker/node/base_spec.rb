@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'prism_checker/checker'
+require 'prism_checker'
 
 describe PrismChecker::Node::Base do
   describe '#path' do

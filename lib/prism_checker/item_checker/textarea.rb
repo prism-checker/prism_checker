@@ -12,6 +12,11 @@ module PrismChecker
         extend ItemCheck::String
       end
 
+      class Empty
+        extend ItemValue::Textarea
+        extend ItemCheck::Empty
+      end
+
       class Regexp
         extend ItemValue::Textarea
         extend ItemCheck::Regexp

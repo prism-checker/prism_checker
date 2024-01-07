@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require_relative '../support/pages/elements'
-require 'prism_checker/checker'
+require 'prism_checker'
 
 describe PrismChecker::Checker do
   subject(:checker) { described_class.new }
 
   let(:page) { Elements.new }
+
   before { page.load }
 
   describe '.check' do
@@ -28,6 +29,13 @@ describe PrismChecker::Checker do
       context 'when input described as string' do
         it 'result is success' do
           expect(checker.check(page, input: 'input value')).to eq true
+        end
+      end
+
+      context 'when input described as :empty' do
+        it 'result is success' do
+          page.input.set('')
+          expect(checker.check(page, input: :empty)).to eq true
         end
       end
 

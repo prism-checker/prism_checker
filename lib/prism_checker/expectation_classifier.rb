@@ -4,6 +4,8 @@ module PrismChecker
   class ExpectationClassifier
     @expectations_map = [
       %i[invisible invisible?],
+      %i[visible visible?],
+      %i[empty empty?],
       %i[string string?],
       %i[regexp regexp?],
       %i[array array?],
@@ -29,6 +31,14 @@ module PrismChecker
 
     def self.invisible?(expectation)
       expectation == :invisible
+    end
+
+    def self.visible?(expectation)
+      expectation == :visible
+    end
+
+    def self.empty?(expectation)
+      expectation == :empty
     end
 
     def self.string?(expectation)

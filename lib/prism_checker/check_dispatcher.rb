@@ -26,8 +26,10 @@ module PrismChecker
 
       section: {
         string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
+        empty: [ItemChecker::Element::Visible, ItemChecker::Element::Empty],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
@@ -40,13 +42,16 @@ module PrismChecker
 
       element: {
         string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
+        empty: [ItemChecker::Element::Visible, ItemChecker::Element::Empty],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
       elements: {
         string: [ItemChecker::Elements::String],
+        empty: [ItemChecker::Elements::Empty],
         regexp: [ItemChecker::Elements::Regexp],
         array: [ItemChecker::Elements::Array],
         number: [ItemChecker::Elements::Number]
@@ -56,32 +61,40 @@ module PrismChecker
         string: [ItemChecker::Element::Visible, ItemChecker::Image::String],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Image::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
       input: {
         string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
+        empty: [ItemChecker::Element::Visible, ItemChecker::Input::Empty],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
       textarea: {
-        string: [ItemChecker::Textarea::String],
-        regexp: [ItemChecker::Textarea::Regexp],
+        string: [ItemChecker::Element::Visible, ItemChecker::Textarea::String],
+        empty: [ItemChecker::Element::Visible, ItemChecker::Textarea::Empty],
+        regexp: [ItemChecker::Element::Visible, ItemChecker::Textarea::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
       select: {
-        string: [ItemChecker::Input::String],
-        regexp: [ItemChecker::Input::Regexp],
+        string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
+        empty: [ItemChecker::Element::Visible, ItemChecker::Input::Empty],
+        regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible]
       },
 
       checkbox: {
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible],
         boolean: [ItemChecker::Element::Visible, ItemChecker::Checkbox::Boolean]
       },
@@ -90,12 +103,14 @@ module PrismChecker
         string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
         hash: [ItemChecker::Element::Visible],
+        visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible],
         boolean: [ItemChecker::Element::Visible, ItemChecker::Checkbox::Boolean]
       },
 
       array: {
         string: [ItemChecker::Array::String],
+        empty: [ItemChecker::Array::String],
         regexp: [ItemChecker::Array::Regexp],
         number: [ItemChecker::Elements::Number]
       },
@@ -110,6 +125,7 @@ module PrismChecker
 
       string: {
         string: [ItemChecker::String::String],
+        empty: [ItemChecker::String::Empty],
         regexp: [ItemChecker::String::Regexp]
       },
 
