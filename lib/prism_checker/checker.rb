@@ -1,23 +1,18 @@
 # frozen_string_literal: true
 
-require_relative 'node/base'
 require_relative 'node/hash'
 require_relative 'node/array'
 require_relative 'node/expectation'
-require_relative 'node/bad_expectation'
 require_relative 'report_builder'
-require_relative 'item_classifier'
-require_relative 'expectation_classifier'
 
 module PrismChecker
   class Checker
-    attr_reader :item, :root, :colorizer, :result
+    attr_reader :item, :root, :result
 
     def initialize
       @item = nil
       @expectation = nil
       @root = nil
-      @colorizer = PrismChecker.colorizer
       @result = nil
     end
 
@@ -45,16 +40,8 @@ module PrismChecker
     end
 
     def report
-      ReportBuilder.new(@root, @colorizer).build
+      ReportBuilder.new(@root).build
     end
-
-    # def print_tree(item, expectation)
-    #   # prepare(item, expectation)
-    #   @root.walk_through do |node, level|
-    #     padding = '  ' * level
-    #     puts "#{padding}#{node.name}"
-    #   end
-    # end
 
     private
 
@@ -63,14 +50,13 @@ module PrismChecker
     end
 
     def build_node(expectation, parent, key)
-      case expectation
-      when Hash
-        Node::Hash.new(self, parent, key, expectation)
-      when Array
-        Node::Array.new(self, parent, key, expectation)
-      else
-        Node::Expectation.new(self, parent, key, expectation)
-      end
+      klass = case expectation
+              when Hash then Node::Hash
+              when Array then Node::Array
+              else Node::Expectation
+              end
+
+      klass.new(self, parent, key, expectation)
     end
 
     def prepare(item, expectation)
@@ -82,16 +68,15 @@ module PrismChecker
     end
 
     def build_tree(expectation, parent)
-      if expectation.is_a? Hash
-        expectation.each_key do |key|
-          child = parent.add_child(key, build_node(expectation[key], parent, key))
-          build_tree(expectation[key], child)
-        end
-      elsif expectation.is_a? Array
-        expectation.each_index do |idx|
-          child = parent.add_child(idx, build_node(expectation[idx], parent, idx))
-          build_tree(expectation[idx], child)
-        end
+      enumerator = case expectation
+                   when Hash then expectation.each_key
+                   when Array then expectation.each_index
+                   else return
+                   end
+
+      enumerator.each do |key|
+        child = parent.add_child(key, build_node(expectation[key], parent, key))
+        build_tree(expectation[key], child)
       end
     end
   end
