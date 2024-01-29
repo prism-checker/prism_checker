@@ -38,8 +38,7 @@ RSpec/NestedGroups:
 
 # We don't need to document any testing code
 Style/Documentation:
-  Exclude:
-    - features/**/*
+  Enabled: false
 
 # This is a better style, and should be the default IMO
 Style/RegexpLiteral:
