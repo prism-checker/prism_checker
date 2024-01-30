@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'prism_checker/checker'
 require 'prism_checker/config'
 
