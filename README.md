@@ -5,7 +5,7 @@
 ## Overview
 
 Prism checker - short and easy-to-read browser tests with clear error messages.
-Prism checker - extensions for rspec and minitest, built on top of the SitePrism gem and uses its Page Object Model.
+Prism checker - extensions for rspec and minitest, built on top of the site_prism gem and uses its Page Object Model.
 
 For example, we need to test the online shop cart:
 
