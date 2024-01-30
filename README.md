@@ -4,11 +4,14 @@
 
 ## Overview
 
+Prism checker - short and easy-to-read browser tests with clear error messages.
+Prism checker - extensions for rspec and minitest, built on top of the site_prism gem and uses its Page Object Model.
+
 For example, we need to test the online shop cart:
 
 ![Cart](doc/images/cart.png "Cart")
 
-Corresponding SitePrism PDO::
+Corresponding SitePrism Page Object Model:
 
 ```ruby
 class Cart < SitePrism::Page
@@ -103,6 +106,9 @@ end
 In case of errors, an easy-to-read message will be displayed:
 
 ![Result](doc/images/result.png "Result")
+
+**Note.**
+_All examples are for rsepc, for mintest it will be the same, but instead of expect(page).be_like(expectation) it will be assert_page_like(page, expectation)_
 
 ## Install
 To install PrismChecker:
@@ -596,13 +602,10 @@ expect(page).to be_like(list_items: [
 ### Absence
 Page Object Model:
 ```ruby
-class Visibility < SitePrism::Page
-  set_url '/visibility.html'
+class Absence < SitePrism::Page
+  set_url '/absence.html'
 
-  elements :list_items, 'li'
-  section  :article, 'article' do
-    # ...
-  end
+  element  :article, 'article'
 end
 ```
 
