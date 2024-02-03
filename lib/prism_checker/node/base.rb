@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'capybara'
 require_relative 'check_fail'
 require_relative 'bad_expectation'
 require_relative '../element_wrapper'

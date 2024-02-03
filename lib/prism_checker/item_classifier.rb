@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'site_prism'
+require 'capybara'
+
 module PrismChecker
   class ItemClassifier
     @elements_map = [
