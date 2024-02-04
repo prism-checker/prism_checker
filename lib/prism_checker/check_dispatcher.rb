@@ -17,44 +17,46 @@ require_relative 'node/bad_expectation'
 
 module PrismChecker
   class CheckDispatcher
-    @common_element_checkers = {
+
+    COMMON_ELEMENT_CHECKERS = {
       string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
       empty: [ItemChecker::Element::Empty],
       regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
       hash: [ItemChecker::Element::Visible],
       visible: [ItemChecker::Element::Visible],
       invisible: [ItemChecker::Element::Invisible]
-    }
+    }.freeze
 
-    @common_elements_checkers = {
+
+    COMMON_ELEMENTS_CHECKERS = {
       string: [ItemChecker::Elements::String],
       empty: [ItemChecker::Elements::Empty],
       regexp: [ItemChecker::Elements::Regexp],
       array: [ItemChecker::Elements::Array],
       number: [ItemChecker::Elements::Number]
-    }
+    }.freeze
 
-    @common_input_checkers = {
+    COMMON_INPUT_CHECKERS = {
       string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
       empty: [ItemChecker::Element::Visible, ItemChecker::Input::Empty],
       regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
       hash: [ItemChecker::Element::Visible],
       visible: [ItemChecker::Element::Visible],
       invisible: [ItemChecker::Element::Invisible]
-    }
+    }.freeze
 
-    @check_map = {
+    CHECK_MAP = {
       page: {
         string: [ItemChecker::Page::Loaded, ItemChecker::Page::String],
         regexp: [ItemChecker::Page::Loaded, ItemChecker::Page::Regexp],
         hash: [ItemChecker::Page::Loaded]
       },
 
-      section: @common_element_checkers,
-      element: @common_element_checkers,
+      section: COMMON_ELEMENT_CHECKERS,
+      element: COMMON_ELEMENT_CHECKERS,
 
-      sections: @common_elements_checkers,
-      elements: @common_elements_checkers,
+      sections: COMMON_ELEMENTS_CHECKERS,
+      elements: COMMON_ELEMENTS_CHECKERS,
 
       image: {
         string: [ItemChecker::Element::Visible, ItemChecker::Image::String],
@@ -64,9 +66,9 @@ module PrismChecker
         invisible: [ItemChecker::Element::Invisible]
       },
 
-      input: @common_input_checkers,
-      textarea: @common_input_checkers,
-      select: @common_input_checkers,
+      input: COMMON_INPUT_CHECKERS,
+      textarea: COMMON_INPUT_CHECKERS,
+      select: COMMON_INPUT_CHECKERS,
 
       radio: {
         string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
@@ -111,12 +113,12 @@ module PrismChecker
         string: [ItemChecker::Nil::String],
         regexp: [ItemChecker::Nil::Regexp]
       }
-    }
+    }.freeze
 
     def self.checkers(_node, element, expectation, item_type)
       expectation_type = ExpectationClassifier.classify(expectation)
 
-      element_expectations = @check_map[item_type]
+      element_expectations = CHECK_MAP[item_type]
 
       raise_bad_element(element) unless element_expectations
 
