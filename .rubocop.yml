@@ -25,7 +25,6 @@ Metrics/BlockLength:
     - './spec/**/*_spec.rb'
     - 'site_prism.gemspec'
 
-# This allows a slightly longer ExampleLength
 RSpec/ExampleLength:
   Max: 20
 
