@@ -17,6 +17,32 @@ require_relative 'node/bad_expectation'
 
 module PrismChecker
   class CheckDispatcher
+    @common_element_checkers = {
+      string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
+      empty: [ItemChecker::Element::Empty],
+      regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
+      hash: [ItemChecker::Element::Visible],
+      visible: [ItemChecker::Element::Visible],
+      invisible: [ItemChecker::Element::Invisible]
+    }
+
+    @common_elements_checkers = {
+      string: [ItemChecker::Elements::String],
+      empty: [ItemChecker::Elements::Empty],
+      regexp: [ItemChecker::Elements::Regexp],
+      array: [ItemChecker::Elements::Array],
+      number: [ItemChecker::Elements::Number]
+    }
+
+    @common_input_checkers = {
+      string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
+      empty: [ItemChecker::Element::Visible, ItemChecker::Input::Empty],
+      regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
+      hash: [ItemChecker::Element::Visible],
+      visible: [ItemChecker::Element::Visible],
+      invisible: [ItemChecker::Element::Invisible]
+    }
+
     @check_map = {
       page: {
         string: [ItemChecker::Page::Loaded, ItemChecker::Page::String],
@@ -24,39 +50,11 @@ module PrismChecker
         hash: [ItemChecker::Page::Loaded]
       },
 
-      section: {
-        string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
-        empty: [ItemChecker::Element::Empty],
-        regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
-        hash: [ItemChecker::Element::Visible],
-        visible: [ItemChecker::Element::Visible],
-        invisible: [ItemChecker::Element::Invisible]
-      },
+      section: @common_element_checkers,
+      element: @common_element_checkers,
 
-      sections: {
-        string: [ItemChecker::Elements::String],
-        empty: [ItemChecker::Elements::Empty],
-        regexp: [ItemChecker::Elements::Regexp],
-        array: [ItemChecker::Elements::Array],
-        number: [ItemChecker::Elements::Number]
-      },
-
-      element: {
-        string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
-        empty: [ItemChecker::Element::Empty],
-        regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
-        hash: [ItemChecker::Element::Visible],
-        visible: [ItemChecker::Element::Visible],
-        invisible: [ItemChecker::Element::Invisible]
-      },
-
-      elements: {
-        string: [ItemChecker::Elements::String],
-        empty: [ItemChecker::Elements::Empty],
-        regexp: [ItemChecker::Elements::Regexp],
-        array: [ItemChecker::Elements::Array],
-        number: [ItemChecker::Elements::Number]
-      },
+      sections: @common_elements_checkers,
+      elements: @common_elements_checkers,
 
       image: {
         string: [ItemChecker::Element::Visible, ItemChecker::Image::String],
@@ -66,43 +64,20 @@ module PrismChecker
         invisible: [ItemChecker::Element::Invisible]
       },
 
-      input: {
+      input: @common_input_checkers,
+      textarea: @common_input_checkers,
+      select: @common_input_checkers,
+
+      radio: {
         string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
-        empty: [ItemChecker::Element::Visible, ItemChecker::Input::Empty],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
-        hash: [ItemChecker::Element::Visible],
-        visible: [ItemChecker::Element::Visible],
-        invisible: [ItemChecker::Element::Invisible]
-      },
-
-      textarea: {
-        string: [ItemChecker::Element::Visible, ItemChecker::Textarea::String],
-        empty: [ItemChecker::Element::Visible, ItemChecker::Textarea::Empty],
-        regexp: [ItemChecker::Element::Visible, ItemChecker::Textarea::Regexp],
-        hash: [ItemChecker::Element::Visible],
-        visible: [ItemChecker::Element::Visible],
-        invisible: [ItemChecker::Element::Invisible]
-      },
-
-      select: {
-        string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
-        empty: [ItemChecker::Element::Visible, ItemChecker::Input::Empty],
-        regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
-        hash: [ItemChecker::Element::Visible],
-        visible: [ItemChecker::Element::Visible],
-        invisible: [ItemChecker::Element::Invisible]
-      },
-
-      checkbox: {
         hash: [ItemChecker::Element::Visible],
         visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible],
         boolean: [ItemChecker::Element::Visible, ItemChecker::Checkbox::Boolean]
       },
 
-      radio: {
-        string: [ItemChecker::Element::Visible, ItemChecker::Input::String],
-        regexp: [ItemChecker::Element::Visible, ItemChecker::Input::Regexp],
+      checkbox: {
         hash: [ItemChecker::Element::Visible],
         visible: [ItemChecker::Element::Visible],
         invisible: [ItemChecker::Element::Invisible],
