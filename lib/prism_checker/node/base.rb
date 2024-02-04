@@ -26,16 +26,6 @@ module PrismChecker
       end
 
       def build_expectation(expectation)
-        return expectation unless expectation.is_a?(Symbol)
-        return AbsenceExpectation.new(0) if expectation == :absent
-        return expectation unless expectation.start_with?('absent')
-
-        AbsenceExpectation.new(Integer(expectation.to_s.split('absent').last))
-      rescue ArgumentError
-        expectation
-      end
-
-      def build_expectation1(expectation)
         if expectation.is_a?(Symbol) && expectation.start_with?('absent')
           delay = expectation == :absent ? 0 : Integer(expectation.to_s.split('absent').last)
 
