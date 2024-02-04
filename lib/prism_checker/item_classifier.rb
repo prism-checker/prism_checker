@@ -5,7 +5,7 @@ require 'capybara'
 
 module PrismChecker
   class ItemClassifier
-    @elements_map = [
+    ELEMENTS_MAP = [
       %i[checkbox element_checkbox?],
       %i[radio element_radio?],
       %i[input element_input?],
@@ -21,16 +21,12 @@ module PrismChecker
       %i[string string?],
       %i[boolean boolean?],
       %i[nil element_nil?]
-    ]
+    ].freeze
 
     def self.classify(element)
-      @elements_map.each do |data|
+      ELEMENTS_MAP.each do |data|
         type, probe = data
-        if probe.is_a? Symbol
-          return type if send(probe, element)
-        elsif probe.call(element)
-          return type
-        end
+        return type if send(probe, element)
       end
 
       :other
@@ -119,10 +115,6 @@ module PrismChecker
 
     def self.element_nil?(element)
       element.nil?
-    end
-
-    def self.add(type, probe, position = 0)
-      @elements_map.insert(position, [type, probe])
     end
   end
 end

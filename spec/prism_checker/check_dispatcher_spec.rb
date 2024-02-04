@@ -29,16 +29,6 @@ describe PrismChecker::CheckDispatcher do
     end
   end
 
-  describe '#add' do
-    context 'when added custom checkers for pair of some classes Foo and Bar' do
-      it '@check_map contains custom checks' do
-        dispatcher.add(:foo, :bar, ['checker stub'])
-        check_map = dispatcher.instance_variable_get(:@check_map)
-        expect(check_map[:foo][:bar]).to eq ['checker stub']
-      end
-    end
-  end
-
   describe '#raise_bad_element' do
     it 'raises error' do
       expect { dispatcher.send(:raise_bad_element, 1..2) }

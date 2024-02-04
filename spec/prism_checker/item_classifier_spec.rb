@@ -126,15 +126,4 @@ describe PrismChecker::ItemClassifier do
       end
     end
   end
-
-  describe '#add' do
-    context 'when added custom classifier for Hash' do
-      context 'when item is Hash' do
-        it 'result is :hash' do
-          classifier.add(:hash, ->(item) { item.is_a?(Hash) })
-          expect(classifier.classify({})).to eq :hash
-        end
-      end
-    end
-  end
 end
