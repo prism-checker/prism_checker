@@ -8,8 +8,8 @@ module PrismChecker
           value.size == expectation.size
         end
 
-        def error_message(_element, value, expectation)
-          "Expected '#{value}' to be equal '#{expectation}'"
+        def error_message(elements, _value, expectation)
+          "Wrong elements count\nActual: #{elements.size}\nExpected: #{expectation.size}"
         end
       end
     end

@@ -88,6 +88,22 @@ describe PrismChecker::Checker do
       end
     end
 
+    context 'with invalid checkbox' do
+      context 'when checked checkbox described as false' do
+        it 'result is failure' do
+          checker.check(page.checkbox_checked, false)
+          expect(checker).to fail_with_report('Fail: Expected to be unchecked')
+        end
+      end
+
+      context 'when unchecked checkbox described as true' do
+        it 'result is failure' do
+          checker.check(page.checkbox_unchecked, true)
+          expect(checker).to fail_with_report('Fail: Expected to be checked')
+        end
+      end
+    end
+
     context 'with valid select' do
       context 'when select has selected option' do
         context 'when select described as string' do
@@ -152,6 +168,18 @@ describe PrismChecker::Checker do
       end
     end
 
+    context 'with invalid section' do
+      context 'when expectation is string' do
+        context 'when PrismChecker.string_comparison = :exact' do
+          it 'result is failure' do
+            PrismChecker.string_comparison = :exact
+            expect(checker.check(page.section, 'span1')).to eq false
+            PrismChecker.string_comparison = :inclusion
+          end
+        end
+      end
+    end
+
     context 'with valid empty elements' do
       context 'when expectation is :empty' do
         it 'result is success' do
@@ -205,6 +233,21 @@ describe PrismChecker::Checker do
 
         it 'result is failure' do
           checker.check(page.some_array, [1, 2, 4])
+          expect(checker).to fail_with_report(expected_report)
+        end
+      end
+
+      context 'when expectation is an array with different size' do
+        let(:expected_report) do
+          <<~REPORT.strip
+            Fail: Wrong elements count
+                  Actual: 3
+                  Expected: 2
+          REPORT
+        end
+
+        it 'result is failure' do
+          checker.check(page.some_array, [1, 2])
           expect(checker).to fail_with_report(expected_report)
         end
       end
