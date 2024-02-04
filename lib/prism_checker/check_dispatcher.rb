@@ -109,8 +109,9 @@ module PrismChecker
       },
 
       array: {
+        array: [ItemChecker::Array::Array],
         string: [ItemChecker::Array::String],
-        empty: [ItemChecker::Array::String],
+        empty: [ItemChecker::Array::Empty],
         regexp: [ItemChecker::Array::Regexp],
         number: [ItemChecker::Elements::Number]
       },
@@ -119,8 +120,9 @@ module PrismChecker
         boolean: [ItemChecker::Any::Any]
       },
 
-      number: {
-        number: [ItemChecker::Any::Any]
+      other: {
+        number: [ItemChecker::Any::Any],
+        other: [ItemChecker::Any::Any]
       },
 
       string: {
