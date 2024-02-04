@@ -16,7 +16,7 @@ module PrismChecker
           value == expectation
         end
 
-        def self.error_message(_checkbox, value, expectation)
+        def self.error_message(_checkbox, _value, expectation)
           if expectation
             'Expected to be checked'
           else

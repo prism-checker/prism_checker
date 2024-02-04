@@ -40,6 +40,9 @@ RSpec/NestedGroups:
 Style/Documentation:
   Enabled: false
 
+Style/IfUnlessModifier:
+  Enabled: false
+
 # This is a better style, and should be the default IMO
 Style/RegexpLiteral:
   EnforcedStyle: slashes
