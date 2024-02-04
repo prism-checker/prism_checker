@@ -18,12 +18,27 @@ class Elements < SitePrism::Page
   element :select_selected, 'select#select-selected'
   element :select_unselected, 'select#select-unselected'
 
+  elements :select_selected_options, 'select#select-selected > option'
+
   elements :inputs, 'input'
   elements :text_elements, 'div.text-element'
   elements :images, 'img.image'
 
   element :radio_selected, 'input#radio1'
   element :radio_unselected, 'input#radio2'
+
+  element :empty_span, '[data-test="empty-span"]'
+
+  elements :empty_spans, '[data-test="empty-section-span"]'
+  elements :absent_elements, '[data-test="absent-element"]'
+
+  section :section, '[data-test="section"]' do
+    elements :empty_spans, '[data-test="section-span"]'
+  end
+
+  section :empty_section, '[data-test="empty-section"]' do
+    elements :empty_spans, '[data-test="empty-section-span"]'
+  end
 
   def inputs_value
     inputs.map(&:value)

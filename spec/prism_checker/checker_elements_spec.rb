@@ -41,7 +41,7 @@ describe PrismChecker::Checker do
 
       context 'when input described as hash' do
         it 'result is success' do
-          expect(checker.check(page, input: { value: 'input value', class: 'foo' })).to eq true
+          expect(checker.check(page, input: { value: 'input value', class: 'foo', disabled: false })).to eq true
         end
       end
     end
@@ -65,7 +65,11 @@ describe PrismChecker::Checker do
       context 'when textarea described as hash' do
         it 'result is success' do
           page.textarea.set('value')
-          expect(checker.check(page, textarea: { text: 'textarea value', value: 'value', 'data-foo' => 'foo' })).to eq true
+          expect(checker.check(page, textarea: {
+                                 text: 'textarea value',
+                                 value: 'value', 'data-foo' => 'foo',
+                                 readonly: false
+                               })).to eq true
         end
       end
     end
@@ -95,7 +99,15 @@ describe PrismChecker::Checker do
 
       context 'when select described as hash' do
         it 'result is success' do
-          expect(checker.check(page, select: { value: 'option2', id: 'select-selected' })).to eq true
+          expect(checker.check(page, select: { value: 'option2', id: 'select-selected', multiple: false })).to eq true
+        end
+      end
+    end
+
+    context 'with valid options for select' do
+      context 'when options described as an array' do
+        it 'result is success' do
+          expect(checker.check(page, select_selected_options: ['option1', { selected: true }, {}])).to eq true
         end
       end
     end
@@ -112,6 +124,46 @@ describe PrismChecker::Checker do
       context 'when select described as hash' do
         it 'result is success' do
           expect(checker.check(page, radio_selected: { value: '1', name: 'radio', checked: true })).to eq true
+        end
+      end
+    end
+
+    context 'with valid text element (span)' do
+      context 'when element is empty' do
+        it 'result is success' do
+          expect(checker.check(page.empty_span, :empty)).to eq true
+        end
+      end
+    end
+
+    context 'with valid empty section' do
+      context 'when expectation is :empty' do
+        it 'result is success' do
+          expect(checker.check(page.empty_section, :empty)).to eq true
+        end
+      end
+    end
+
+    context 'with invalid empty section' do
+      context 'when expectation is :empty' do
+        it 'result is failure' do
+          expect(checker.check(page.section, :empty)).to eq false
+        end
+      end
+    end
+
+    context 'with valid empty elements' do
+      context 'when expectation is :empty' do
+        it 'result is success' do
+          expect(checker.check(page.empty_spans, :empty)).to eq true
+        end
+      end
+
+      context 'when elements are not present on the page' do
+        context 'when expectation is :empty' do
+          it 'result is success' do
+            expect(checker.check(page.absent_elements, :empty)).to eq true
+          end
         end
       end
     end

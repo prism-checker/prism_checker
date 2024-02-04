@@ -43,10 +43,12 @@ module PrismChecker
 
       class Empty
         def self.value(elements)
-          elements
+          elements.map(&:text).join
         end
 
-        extend ItemCheck::EmptyArray
+        def self.check(_elements, value, _expectation)
+          value.empty?
+        end
       end
     end
   end

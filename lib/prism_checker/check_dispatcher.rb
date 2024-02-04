@@ -26,7 +26,7 @@ module PrismChecker
 
       section: {
         string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
-        empty: [ItemChecker::Element::Visible, ItemChecker::Element::Empty],
+        empty: [ItemChecker::Element::Empty],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
         hash: [ItemChecker::Element::Visible],
         visible: [ItemChecker::Element::Visible],
@@ -35,6 +35,7 @@ module PrismChecker
 
       sections: {
         string: [ItemChecker::Elements::String],
+        empty: [ItemChecker::Elements::Empty],
         regexp: [ItemChecker::Elements::Regexp],
         array: [ItemChecker::Elements::Array],
         number: [ItemChecker::Elements::Number]
@@ -42,7 +43,7 @@ module PrismChecker
 
       element: {
         string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
-        empty: [ItemChecker::Element::Visible, ItemChecker::Element::Empty],
+        empty: [ItemChecker::Element::Empty],
         regexp: [ItemChecker::Element::Visible, ItemChecker::Element::Regexp],
         hash: [ItemChecker::Element::Visible],
         visible: [ItemChecker::Element::Visible],
