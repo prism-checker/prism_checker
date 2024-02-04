@@ -36,7 +36,7 @@ module PrismChecker
       # puts e.message
       # pp e.backtrace
       # puts '---------------------'
-      raise e.class, report + "\n" + e.message
+      raise e.class, "#{report}\n#{e.message}"
     end
 
     def report

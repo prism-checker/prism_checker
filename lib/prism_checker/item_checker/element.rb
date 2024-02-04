@@ -8,7 +8,6 @@ require_relative 'item_check/empty'
 module PrismChecker
   module ItemChecker
     module Element
-
       class String
         extend ItemValue::Element
         extend ItemCheck::String

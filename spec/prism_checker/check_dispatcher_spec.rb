@@ -16,7 +16,7 @@ describe PrismChecker::CheckDispatcher do
       it 'dispatcher raises error' do
         expect { dispatcher.checkers(nil, 1...2, 'string', :other) }
           .to raise_error(PrismChecker::Node::BadExpectation)
-          .with_message("Don't know how to check Range")
+          .with_message("Don't know how to compare Range with String")
       end
     end
 
@@ -36,6 +36,14 @@ describe PrismChecker::CheckDispatcher do
         check_map = dispatcher.instance_variable_get(:@check_map)
         expect(check_map[:foo][:bar]).to eq ['checker stub']
       end
+    end
+  end
+
+  describe '#raise_bad_element' do
+    it 'raises error' do
+      expect { dispatcher.send(:raise_bad_element, 1..2) }
+        .to raise_error(PrismChecker::Node::BadExpectation)
+        .with_message("Don't know how to check Range")
     end
   end
 end

@@ -115,5 +115,47 @@ describe PrismChecker::Checker do
         end
       end
     end
+
+    context 'when inspected item is an correct array' do
+      context 'when expectation is :empty' do
+        it 'result is success' do
+          expect(checker.check(page.empty_array, :empty)).to eq true
+        end
+      end
+
+      context 'when expectation is an array' do
+        it 'result is success' do
+          checker.check(page.some_array, [1, 2, 4])
+          expect(checker.check(page.some_array, [1, 2, 3])).to eq true
+        end
+      end
+    end
+
+    context 'when inspected item is an incorrect array' do
+      context 'when expectation is :empty' do
+        it 'result is failure' do
+          checker.check(page.some_array, :empty)
+          expect(checker).to fail_with_report('Fail: Expected to be empty')
+        end
+      end
+
+      context 'when expectation is an array' do
+        let(:expected_report) do
+          <<~REPORT.strip
+            [
+              Ok
+              Ok
+              Fail: Expected: 4
+                    Got: 3
+            ]
+          REPORT
+        end
+
+        it 'result is failure' do
+          checker.check(page.some_array, [1, 2, 4])
+          expect(checker).to fail_with_report(expected_report)
+        end
+      end
+    end
   end
 end

@@ -36,4 +36,16 @@ class Elements < SitePrism::Page
   def some_string
     'String'
   end
+
+  def some_array
+    [1, 2, 3]
+  end
+
+  def empty_array
+    []
+  end
+
+  def number
+    1
+  end
 end
