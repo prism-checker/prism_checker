@@ -2,7 +2,7 @@
 
 module PrismChecker
   class ExpectationClassifier
-    @expectations_map = [
+    EXPECTATIONS_MAP = [
       %i[invisible invisible?],
       %i[visible visible?],
       %i[empty empty?],
@@ -12,16 +12,12 @@ module PrismChecker
       %i[hash hash?],
       %i[boolean boolean?],
       %i[number number?]
-    ]
+    ].freeze
 
     def self.classify(expectation)
-      @expectations_map.each do |data|
+      EXPECTATIONS_MAP.each do |data|
         type, probe = data
-        if probe.is_a? Symbol
-          return type if send(probe, expectation)
-        elsif probe.call(expectation)
-          return type
-        end
+        return type if send(probe, expectation)
       end
 
       :other
@@ -61,10 +57,6 @@ module PrismChecker
 
     def self.number?(expectation)
       expectation.is_a?(Integer)
-    end
-
-    def self.add(type, probe, position = 0)
-      @expectations_map.insert(position, [type, probe])
     end
   end
 end

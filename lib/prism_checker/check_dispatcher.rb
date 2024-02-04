@@ -162,10 +162,5 @@ module PrismChecker
       error = "Don't know how to compare #{element_class} with #{expectation.class.name}"
       raise Node::BadExpectation, error
     end
-
-    def self.add(element_type, check_type, checks)
-      @check_map[element_type] ||= {}
-      @check_map[element_type][check_type] = checks
-    end
   end
 end
