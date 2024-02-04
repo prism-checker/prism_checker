@@ -37,15 +37,9 @@ module PrismChecker
         return @element.send(method, *args)
       end
 
-      # if (ItemClassifier.element_checkbox?(@element) || ItemClassifier.element_radio?(@element)) && method == :checked
-      #   return @element.checked?
-      # end
-
       ret = @element[method]
 
       if ret.nil? && !method.start_with?('data-')
-        # return '' if method.start_with?('data-')
-
         raise NoMethodError, "unknown attribute '#{method}'"
       end
 

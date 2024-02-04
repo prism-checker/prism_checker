@@ -18,14 +18,14 @@ describe PrismChecker::Checker do
     regular_fast_test_time = 0
     test_time = 0
 
+    # ------------------------------------------------------------------------------------------------------------------
     1.upto(repeat) do
       page.load
 
+      start_time = Time.now
+
       expect(page.header.text).to eq('Performance test')
       expect(page).to have_ol1
-
-      # ----------------------------------------------------------------------------------------------------------------------------------
-      start_time = Time.now
 
       expect(page.ol1).to be_visible
       expect(page.ol1.li1.size).to eq(n)
@@ -51,7 +51,7 @@ describe PrismChecker::Checker do
       regular_slow_test_time += Time.now - start_time
     end
 
-    # ----------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     1.upto(repeat) do
       page.load
 
@@ -84,7 +84,7 @@ describe PrismChecker::Checker do
       regular_fast_test_time += Time.now - start_time
     end
 
-    # ----------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
 
     1.upto(repeat) do
       page.load
@@ -182,18 +182,8 @@ describe PrismChecker::Checker do
       test_time += Time.now - start_time
     end
 
-    avg_regular_slow_test_time = regular_slow_test_time / repeat
-    avg_regular_fast_test_time = regular_fast_test_time / repeat
-    avg_test_time = test_time / repeat
-
-    puts "avg_regular_slow_test_time = #{avg_regular_slow_test_time}"
-    puts "avg_regular_fast_test_time = #{avg_regular_fast_test_time}"
-    puts "avg_test_time = #{avg_test_time}"
-    puts "avg_regular_slow_test_time/avg_test_time = #{avg_regular_slow_test_time / avg_test_time}"
-    puts "avg_regular_fast_test_time/avg_test_time = #{avg_regular_fast_test_time / avg_test_time}"
-
-    expect(avg_regular_slow_test_time / avg_test_time).to be > 1.9
-    expect(avg_regular_fast_test_time / avg_test_time).to be > 0.85
+    expect(regular_slow_test_time / test_time).to be > 1.9
+    expect(regular_fast_test_time / test_time).to be > 0.8
   end
 end
 

@@ -24,7 +24,9 @@ module PrismChecker
       end
 
       class Visible
-        def self.value(_element); end
+        def self.value(element)
+          element
+        end
 
         def self.check(element, _value, _expectation)
           element.visible?
