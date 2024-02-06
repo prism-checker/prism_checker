@@ -19,23 +19,17 @@ module PrismChecker
     def check(item, expectation)
       prepare(item, expectation)
 
+      # rubocop:disable Style/SymbolProc
+      # rubocop is wrong
       walk_through do |node|
         node.check
       end
+      # rubocop:enable Style/SymbolProc
 
       @result = true
     rescue Node::CheckFail
-      # puts report
       @result = false
-      # rescue Node::BadExpectation => e
-      #   # raise
-      #   raise e.class, report + "\n" + e.message
     rescue StandardError => e
-      # puts '---------------------'
-      # puts e.class
-      # puts e.message
-      # pp e.backtrace
-      # puts '---------------------'
       raise e.class, "#{report}\n#{e.message}"
     end
 

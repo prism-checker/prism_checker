@@ -17,7 +17,6 @@ require_relative 'node/bad_expectation'
 
 module PrismChecker
   class CheckDispatcher
-
     COMMON_ELEMENT_CHECKERS = {
       string: [ItemChecker::Element::Visible, ItemChecker::Element::String],
       empty: [ItemChecker::Element::Empty],
@@ -26,7 +25,6 @@ module PrismChecker
       visible: [ItemChecker::Element::Visible],
       invisible: [ItemChecker::Element::Invisible]
     }.freeze
-
 
     COMMON_ELEMENTS_CHECKERS = {
       string: [ItemChecker::Elements::String],
