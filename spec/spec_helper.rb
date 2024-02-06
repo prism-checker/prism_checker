@@ -15,18 +15,27 @@ require_relative './custom_matchers'
 
 Capybara.default_max_wait_time = 5
 
-Webdrivers::Chromedriver.required_version = ENV['CHROMEDRIVER_VERSION'] if ENV['CHROMEDRIVER_VERSION']
+browser = ENV.fetch('BROWSER', 'chrome').to_sym
 
-options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-  opts.binary = ENV['BROWSER_BINARY'] if ENV['BROWSER_BINARY']
-  opts.add_argument('--no-sandbox')
-  opts.headless! unless ENV['DISABLE_HEADLESS']
-  opts.add_argument('--disable-dev-shm-usage')
-  opts.add_argument('--disable-gpu')
-end
+options = if browser == :chrome
+            Webdrivers::Chromedriver.required_version = ENV['CHROMEDRIVER_VERSION'] if ENV['CHROMEDRIVER_VERSION']
+
+            Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+              opts.binary = ENV['CHROME_BINARY'] if ENV['CHROME_BINARY']
+              opts.add_argument('--no-sandbox')
+              opts.headless! unless ENV['DISABLE_HEADLESS']
+              opts.add_argument('--disable-dev-shm-usage')
+              opts.add_argument('--disable-gpu')
+            end
+          else
+            Selenium::WebDriver::Firefox::Options.new.tap do |opts|
+              opts.binary = ENV['FIREFOX_BINARY'] if ENV['FIREFOX_BINARY']
+              opts.headless! unless ENV['DISABLE_HEADLESS']
+            end
+          end
 
 Capybara.register_driver :prism_checker do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: [options])
+  Capybara::Selenium::Driver.new(app, browser: browser, capabilities: [options])
 end
 
 Capybara.configure do |config|
@@ -34,10 +43,4 @@ Capybara.configure do |config|
   config.default_max_wait_time = 1
   config.app_host = "file://#{File.dirname(__FILE__)}/../test_site"
   config.ignore_hidden_elements = false
-end
-
-def wait_enter
-  puts '--------- Press enter to continue ---------'
-  Readline.readline
-  puts 'continue...'
 end

@@ -29,7 +29,7 @@ jobs:
       - name: Run tests
         env:
           CHROMEDRIVER_VERSION: 114.0.5735.16
-          BROWSER_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
           SIMPLE_COV_JSON_FORMATTER: SIMPLE_COV_JSON_FORMATTER
         run: bundle exec rspec spec
 

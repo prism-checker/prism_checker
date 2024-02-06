@@ -2,20 +2,10 @@
 
 require 'rspec/expectations'
 
-module PrismChecker
-  class Checker
-    # RSepc differ use inspect to create diff
-    def inspect
-      report
-    end
-  end
-end
-
 class FailWithReport < RSpec::Matchers::BuiltIn::BaseMatcher
   def failure_message
     return "\nExpected result false, got #{actual.result}\n" if actual.result != false
 
-    # "Expected report\n#{actual.report}\nto match\n#{expected}"
     'Wrong report'
   end
 
