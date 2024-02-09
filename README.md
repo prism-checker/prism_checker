@@ -4,14 +4,15 @@
 
 ## Overview
 
-Prism checker - short and easy-to-read browser tests with clear error messages.
-Prism checker - extensions for rspec and minitest, built on top of the site_prism gem and uses its Page Object Model.
+PrismChecker is an extension for rspec and minitest, built on top of the [SitePrism](https://github.com/site-prism/site_prism)
+gem and using its page object model.
+It allows you to write short, easy-to-read browser tests with clear error messages
 
-For example, we need to test the online shop cart:
+Let's assume your application has the following shop cart:
 
 ![Cart](doc/images/cart.png "Cart")
 
-Corresponding SitePrism Page Object Model:
+Corresponding SitePrism PDO::
 
 ```ruby
 class Cart < SitePrism::Page
@@ -107,9 +108,6 @@ In case of errors, an easy-to-read message will be displayed:
 
 ![Result](doc/images/result.png "Result")
 
-**Note.**
-_All examples are for rsepc, for mintest it will be the same, but instead of expect(page).be_like(expectation) it will be assert_page_like(page, expectation)_
-
 ## Install
 To install PrismChecker:
 
@@ -148,7 +146,7 @@ end
 ```
 
 
-#### Check text on the page
+#### Text check
 
 ```ruby
 @page = Cart.new
@@ -158,11 +156,11 @@ expect(page).to be_like('Shopping Cart')
 
 # Same as
 # expect(page.loaded?).to eq(true)
-# expect(page).to match('Shopping Cart')
+# expect(page.text).to match('Shopping Cart')
 ```
 
 
-#### Check element and section
+#### Element and section check
 
 ```ruby
 @page = Cart.new
@@ -188,7 +186,7 @@ expect(page).to be_like(
 ```
 
 
-#### Check element
+#### Element check
 
 ```ruby
 @page = Cart.new
@@ -217,7 +215,7 @@ expect(page).to be_like(header: 'Shopping Cart')
 ```
 
 
-#### Check section
+#### Section check
 
 ```ruby
 expect(page.checkout).to be_like(
@@ -250,7 +248,7 @@ expect(page).to be_like(
 ```
 
 
-#### Check sections
+#### Sections check
 
 ```ruby
 expect(page).to be_like(
@@ -305,7 +303,7 @@ expect(page).to be_like(cart_items: [{name: 'Cup'}, {name: 'Cap'}]) # Ok
 ```
 
 
-#### Check elements
+#### Elements check
 
 ```ruby
 expect(page).to be_like(
@@ -660,7 +658,6 @@ When the comparison method is :inclusion, and it is necessary to compare with an
 expect(page.element_without_text).to be_like(:empty)
 
 # Same as
-# expect(page.element_without_text.visible?).to eq(true)
 # expect(page.element_without_text.text.empty?).to eq(true)
 ```
 or

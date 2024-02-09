@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/prism-checker/prism_checker'
   s.summary     = 'Short and easy-to-read browser tests with clear error messages'
   s.description = <<~DESCR
-    Prism checker is an extension for rspec and minitest, built on top of the SitePrism gem and using its page object model.
+    prism_checker is an extension for rspec and minitest, built on top of the site_prism gem and using its page object model.
     It allows you to write short, easy-to-read browser tests with clear error messages
   DESCR
   s.files        = Dir.glob('lib/**/*') + %w[LICENSE.md README.md]
