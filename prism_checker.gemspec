@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'prism_checker'
-  s.version     = '0.0.3'
+  s.version     = '1.0.0'
   s.required_ruby_version = '>= 2.5'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'BSD-3-Clause'
