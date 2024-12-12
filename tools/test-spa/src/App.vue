@@ -3,6 +3,10 @@
     <template v-if="loading">
       <div>Loading...</div>
     </template>
+    <template v-else-if="config.records">
+      <h1>Array Of Records</h1>
+      <ArrayOfRecords />
+    </template>
     <template v-else>
       <Header v-if="config.showHeader"/>
       <img class="logo" src="./assets/logo.png" alt="logo"/>
@@ -27,9 +31,10 @@
 <script>
 import Post from './components/Post.vue'
 import Header from './components/Header.vue'
+import ArrayOfRecords from './components/ArrayOfRecords.vue'
 
 export default {
-  components: {Post, Header},
+  components: {Post, Header, ArrayOfRecords},
   data() {
     return {
       loading: true,
@@ -98,6 +103,9 @@ export default {
               delay: 0,
             }
           ]
+        },
+        'records': {
+          records: true,
         }
       }
     }
