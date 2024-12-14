@@ -122,7 +122,7 @@ module PrismChecker
           value = nil
           checkers.each do |checker|
             result = wait_until_true do
-              element = self.element if element.is_a? ::Array
+              element = self.element if element.is_a?(::Array) || element.is_a?(Capybara::Result)
 
               value = checker.value(element)
               checker.check(element, value, expectation)

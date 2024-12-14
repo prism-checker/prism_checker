@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'prism_checker/item_checker/item_check/string'
+require 'prism_checker'
 
 describe PrismChecker::ItemChecker::ItemCheck::String do
   let(:checker) { extend described_class }

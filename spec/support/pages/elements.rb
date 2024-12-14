@@ -32,7 +32,7 @@ class Elements < SitePrism::Page
   elements :empty_spans, '[data-test="empty-section-span"]'
   elements :absent_elements, '[data-test="absent-element"]'
 
-  section :section, '[data-test="section"]' do
+  section :filled_section, '[data-test="section"]' do
     elements :empty_spans, '[data-test="section-span"]'
   end
 

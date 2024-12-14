@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Post < SitePrism::Section
-  element :title, 'h3'
+  element :post_title, 'h3'
   element :content, '.post__content'
   element :date_time, '.post__date-time'
 

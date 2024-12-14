@@ -14,6 +14,10 @@ class Blog < SitePrism::Page
     sections :post, Post, '.post'
   end
 
+  section :records, '.records' do
+    elements :record, '.record'
+  end
+
   def post_dates
     posts.post.map(&:date)
   end
