@@ -163,7 +163,7 @@ describe PrismChecker::Checker do
     context 'with invalid empty section' do
       context 'when expectation is :empty' do
         it 'result is failure' do
-          expect(checker.check(page.section, :empty)).to eq false
+          expect(checker.check(page.filled_section, :empty)).to eq false
         end
       end
     end
@@ -173,7 +173,7 @@ describe PrismChecker::Checker do
         context 'when PrismChecker.string_comparison = :exact' do
           it 'result is failure' do
             PrismChecker.string_comparison = :exact
-            expect(checker.check(page.section, 'span1')).to eq false
+            expect(checker.check(page.filled_section, 'span1')).to eq false
             PrismChecker.string_comparison = :inclusion
           end
         end
