@@ -15,8 +15,8 @@ describe PrismChecker::Checker do
       {
         posts: {
           post: [
-            { title: 'Lorem ipsum' },
-            { title: 'Vestibulum ante' }
+            { post_title: 'Lorem ipsum' },
+            { post_title: 'Vestibulum ante' }
           ]
         }
       }
@@ -28,10 +28,10 @@ describe PrismChecker::Checker do
           posts: {
             post: [
               {
-                title: Ok
+                post_title: Ok
               }
               {
-                title: Ok
+                post_title: Ok
               }
             ]
           }

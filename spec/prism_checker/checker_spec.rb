@@ -53,8 +53,8 @@ describe PrismChecker::Checker do
         {
           posts: {
             post: [
-              { title: 'Lorem ipsum' },
-              { title: 'Ut eget justo erat' }
+              { post_title: 'Lorem ipsum' },
+              { post_title: 'Ut eget justo erat' }
             ]
           }
         }
@@ -66,10 +66,10 @@ describe PrismChecker::Checker do
             posts: {
               post: [
                 {
-                  title: Ok
+                  post_title: Ok
                 }
                 {
-                  title: Fail: Expected 'Vestibulum ante' to include 'Ut eget justo erat'
+                  post_title: Fail: Expected 'Vestibulum ante' to include 'Ut eget justo erat'
                 }
               ]
             }
