@@ -2,9 +2,6 @@ name: CI-common
 
 on:
   workflow_call:
-    secrets:
-      CC_TEST_REPORTER_ID:
-        required: true
 
 permissions:
   contents: read
@@ -47,18 +44,9 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
+      # Coverage is measured and enforced by simplecov itself: see .simplecov,
+      # which fails the run below 95%.
       - name: Run tests
         env:
           CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
-          SIMPLE_COV_JSON_FORMATTER: SIMPLE_COV_JSON_FORMATTER
         run: bundle exec rspec spec
-
-      # Coverage is identical across the matrix, so it is published once only.
-      - name: Test & publish code coverage
-        if: matrix.ruby-version == '3.4'
-        uses: paambaati/codeclimate-action@v9.0.0
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/coverage/coverage.json:simplecov
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
