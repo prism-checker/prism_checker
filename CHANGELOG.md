@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Minimum supported Ruby is now 3.1 (was 2.5).
+- Minimum supported Ruby is now 3.3 (was 2.5).
 - `SitePrism::TimeoutError` is resolved at runtime, so both site_prism 5 and 6 are supported.
 - `site_prism` dependency narrowed to `>= 5.0, < 7`.
 - Development dependencies moved from the gemspec to the `Gemfile`.

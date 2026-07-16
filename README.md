@@ -23,7 +23,7 @@ PrismChecker is an extension for rspec and minitest, built on top of the [SitePr
 gem and using its page object model.
 It allows you to write short, easy-to-read browser tests with clear error messages
 
-Requires Ruby >= 3.1 and site_prism >= 5.0.
+Requires Ruby >= 3.3 and site_prism >= 5.0.
 
 Let's assume your application has the following shop cart:
 
