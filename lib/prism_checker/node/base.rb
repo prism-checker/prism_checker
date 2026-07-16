@@ -6,6 +6,7 @@ require_relative 'bad_expectation'
 require_relative '../element_wrapper'
 require_relative '../absence_expectation'
 require_relative '../item_classifier'
+require_relative '../site_prism_compat'
 
 module PrismChecker
   module Node
@@ -67,7 +68,7 @@ module PrismChecker
 
       def wait_until_true(timeout = @timeout, &block)
         SitePrism::Waiter.wait_until_true(timeout, &block)
-      rescue SitePrism::TimeoutError
+      rescue SitePrismCompat.timeout_error
         false
       end
 
