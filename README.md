@@ -2,11 +2,28 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/c497733cb53175decd0f/maintainability)](https://codeclimate.com/github/prism-checker/prism_checker/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c497733cb53175decd0f/test_coverage)](https://codeclimate.com/github/prism-checker/prism_checker/test_coverage)
 
+## Contents
+
+- [Overview](#overview)
+- [Install](#install)
+- [Setup](#setup)
+- [Cheat sheet](#cheat-sheet)
+- [Examples](#examples)
+  - [Common cases](#common-cases)
+  - [HTML elements](#html-elements)
+  - [Visibility](#visibility)
+  - [Absence](#absence)
+- [Configuration](#configuration)
+  - [String comparison](#string-comparison)
+  - [Colorizer](#colorizer)
+
 ## Overview
 
 PrismChecker is an extension for rspec and minitest, built on top of the [SitePrism](https://github.com/site-prism/site_prism)
 gem and using its page object model.
 It allows you to write short, easy-to-read browser tests with clear error messages
+
+Requires Ruby >= 3.1 and site_prism >= 5.0.
 
 Let's assume your application has the following shop cart:
 
@@ -95,7 +112,7 @@ describe 'Cart' do
         }
       ],
       checkout: {
-        total: '67.00',
+        total: '67.00', # deliberately wrong, to show the failure report below
         checkout_button: 'Checkout'
       }
     )
@@ -104,7 +121,8 @@ end
 
 ```
 
-In case of errors, an easy-to-read message will be displayed:
+In case of errors, an easy-to-read message will be displayed. Every key is reported with its
+own status, so the failing one is visible at a glance:
 
 ![Result](doc/images/result.png "Result")
 
@@ -121,6 +139,109 @@ gem install prism_checker_rspec
 ```bash
 gem install prism_checker_minitest
 ```
+
+## Setup
+
+PrismChecker drives the browser through SitePrism and Capybara, so a Capybara driver has to be
+registered as usual. Only the last two lines are PrismChecker-specific.
+
+### RSpec
+
+Adds the `be_like` matcher:
+
+```ruby
+# Gemfile
+gem 'prism_checker_rspec'
+```
+```ruby
+# spec/spec_helper.rb
+require 'capybara/rspec'
+require 'selenium-webdriver'
+require 'site_prism'
+require 'prism_checker_rspec'
+
+Capybara.register_driver :prism_checker do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless=new')
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.configure do |config|
+  config.default_driver = :prism_checker
+  config.app_host = 'http://localhost:3000'
+  # Needed so that :invisible expectations can see hidden elements
+  config.ignore_hidden_elements = false
+end
+```
+```ruby
+# spec/cart_spec.rb
+describe 'Cart' do
+  it 'is correct' do
+    page = Cart.new
+    page.load
+
+    expect(page).to be_like(header: 'Shopping Cart')
+  end
+end
+```
+
+### MiniTest
+
+Adds the `assert_page_like` assertion:
+
+```ruby
+# Gemfile
+gem 'prism_checker_minitest'
+```
+```ruby
+# test/test_helper.rb
+require 'minitest/autorun'
+require 'capybara/minitest'
+require 'site_prism'
+require 'prism_checker_minitest'
+
+# ...same Capybara.register_driver / Capybara.configure as above
+```
+```ruby
+# test/cart_test.rb
+class CartTest < Minitest::Test
+  include Capybara::DSL
+  include Capybara::Minitest::Assertions
+
+  def test_cart
+    page = Cart.new
+    page.load
+
+    assert_page_like page, header: 'Shopping Cart'
+  end
+end
+```
+
+## Cheat sheet
+
+What gets checked depends on the type of the expectation and on the inspected item.
+
+| Expectation | Checked against |
+|---|---|
+| `'text'` | `text` of an element, section or page; `value` of an input, textarea or select; `src` of an image |
+| `/regexp/` | the same values, matched as a regular expression |
+| `42` | `size` of elements/sections |
+| `[...]` | `size` of elements/sections, then each entry in turn |
+| `{...}` | element is visible, then each key in turn |
+| `true` / `false` | `checked?` of a checkbox or radio |
+| `:visible` | `visible?` |
+| `:invisible` | `visible?` is false |
+| `:absent` | `has_no_<name>?` |
+| `:absent3` | sleep 3 seconds, then `has_no_<name>?` |
+| `:empty` | value is an empty string |
+
+Inside a `{...}` expectation, keys map to Capybara methods (`text`, `value`, `checked`, `disabled`,
+`readonly`, `selected`, `multiple`) or, failing that, to HTML attributes (`class`, `id`, `src`, `alt`,
+`data-*`, ...).
+
+A page or element is always checked for being loaded or visible before its value is compared,
+so those assertions never need to be spelled out.
 
 ## Examples
 ### Common cases
@@ -628,6 +749,8 @@ expect(page).to be_like(article: :absent3)
 # sleep 3
 # expect(page.has_no_article?).to eq(true)
 ```
+## Configuration
+
 ### String comparison
 
 #### Exact match and inclusion
@@ -667,4 +790,24 @@ expect(page.element_without_text).to be_like(/^$/)
 # Same as
 # expect(page.element_without_text.visible?).to eq(true)
 # expect(page.element_without_text.text).to match(/^$/)
+```
+
+### Colorizer
+
+Failure reports are colorized through `PrismChecker.colorizer`. `prism_checker_rspec` sets one that
+uses the RSpec console codes; the default of the core gem returns text unchanged.
+
+A colorizer answers `colorize(text, code)`, where `code` is one of `:success`, `:failure`,
+`:detail` or `:white`:
+
+```ruby
+class MyColorizer
+  CODES = { success: 32, failure: 31, detail: 33, white: 37 }.freeze
+
+  def self.colorize(text, code)
+    "\e[#{CODES[code]}m#{text}\e[0m"
+  end
+end
+
+PrismChecker.colorizer = MyColorizer
 ```
