@@ -4,3 +4,6 @@ coverage/*
 .env
 .byebug_history
 .ruby-version
+
+# Gems built locally by `gem build`
+*.gem
